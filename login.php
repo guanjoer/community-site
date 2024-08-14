@@ -36,6 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // 세션에 사용자 정보 저장
         $_SESSION['user_id'] = $user['id'];
         $_SESSION['username'] = $user['username'];
+        $_SESSION['role'] = $user['role'];
         
         // 로그인 성공 시 리다이렉트
         header("Location: index.php");

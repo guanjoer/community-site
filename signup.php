@@ -47,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     }
 
-    // 중복 체크 - 사용자명
+    // 중복 체크 - 아이디
     $stmt = $pdo->prepare("SELECT COUNT(*) FROM users WHERE username = ?");
     $stmt->execute([$username]);
     if ($stmt->fetchColumn() > 0) {
@@ -114,7 +114,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body>
     <h2>회원가입</h2>
-    <form method="post" action="register.php" onsubmit="return validateForm();">
+    <form method="post" action="signup.php" onsubmit="return validateForm();">
         <label for="email">이메일</label>
         <input type="email" id="email" name="email" required><br>
 

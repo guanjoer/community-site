@@ -1,12 +1,6 @@
 <?php
 session_start();
 
-// 로그인 여부 확인
-// if (!isset($_SESSION['user_id'])) {
-//     header("Location: login.php");
-//     exit();
-// }
-
 // DB 연결 설정
 $host = getenv('DB_HOST');
 $db = getenv('DB_NAME');
@@ -40,7 +34,7 @@ $stmt = $pdo->query("SELECT id, name FROM boards ORDER BY name ASC");
 $boards = $stmt->fetchAll();
 
 // 전체 글 목록 가져오기 (간단히 최근 10개 글을 가져오는 예시)
-$stmt = $pdo->query("SELECT posts.id, posts.title, posts.created_at, users.username FROM posts JOIN users ON posts.user_id = users.id ORDER BY posts.created_at DESC LIMIT 10");
+$stmt = $pdo->query("SELECT posts.id, posts.title, posts.created_at, users.username, posts.board_id FROM posts JOIN users ON posts.user_id = users.id ORDER BY posts.created_at DESC LIMIT 10");
 $posts = $stmt->fetchAll();
 
 // 로그아웃 처리
@@ -62,11 +56,16 @@ if (isset($_GET['logout'])) {
         <h1>커뮤니티 사이트</h1>
         <div>
             <?php if (isset($_SESSION['user_id'])): ?>
-                <img src="uploads/<?php echo htmlspecialchars($user['profile_image']); ?>" alt="프로필 이미지" width="50" height="50">
+                <img id="profile-preview" src="uploads/<?php echo !empty($user['profile_image']) ? htmlspecialchars($user['profile_image']) : 'default.png'; ?>" alt="프로필 이미지" width="100" height="100"><br>
                 <span><?php echo htmlspecialchars($user['username']); ?>님, 환영합니다!</span>
-                <a href="index.php?logout=true">로그아웃</a>
+                <a href="index.php?logout=true">로그아웃</a><br>
+                <?php if ($_SESSION['role'] == 'admin'): ?>
+                    <a href="admin/dashboard.php">관리자 대시보드로 이동</a><br>
+                    <a href="admin/create_board.php">새로운 게시판 생성</a>
+                <?php endif; ?>
             <?php else: ?>
                 <a href="login.php">로그인</a>
+                <a href="signup.php">회원가입</a>
             <?php endif; ?>
         </div>
     </header>
@@ -95,13 +94,17 @@ if (isset($_GET['logout'])) {
         <h2>최근 게시글</h2>
         <ul>
             <?php foreach ($posts as $post): ?>
-                <li>
-                    <a href="post.php?id=<?php echo $post['id']; ?>">
-                        <?php echo htmlspecialchars($post['title']); ?>
-                    </a>
-                    <br>
-                    <span>작성자: <?php echo htmlspecialchars($post['username']); ?> | 작성일: <?php echo $post['created_at']; ?></span>
-                </li>
+                <?php foreach ($boards as $board): ?>
+                    <?php if ($post['board_id'] == $board['id']): ?>
+                        <li>
+                            <a href="post.php?id=<?php echo $post['id']."&board=".$board['id']; ?>">
+                                <?php echo htmlspecialchars($post['title']); ?>
+                            </a>
+                            <br>
+                            <span>작성자: <?php echo htmlspecialchars($post['username']); ?> | 작성일: <?php echo $post['created_at']; ?></span>
+                        </li>
+                    <?php endif; ?>
+                <?php endforeach; ?>
             <?php endforeach; ?>
         </ul>
     </section>
