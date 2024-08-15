@@ -7,26 +7,7 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-// DB 연결 설정
-$host = getenv('DB_HOST');
-$db = getenv('DB_NAME');
-$user = getenv('DB_USER');
-$pass = getenv('DB_PASS');
-$charset = 'utf8mb4';
-
-$dsn = "mysql:host=$host;dbname=$db;charset=$charset";
-$options = [
-    PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
-    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-    PDO::ATTR_EMULATE_PREPARES   => false,
-];
-
-try {
-    $pdo = new PDO($dsn, $user, $pass, $options);
-} catch (\PDOException $e) {
-    echo json_encode(['success' => false, 'message' => 'DB 연결 오류']);
-    exit();
-}
+require_once 'config/db.php';
 
 // 댓글 수정 처리
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {

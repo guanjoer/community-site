@@ -1,25 +1,7 @@
 <?php
 session_start();
 
-// DB 연결 설정
-$host = getenv('DB_HOST');
-$db = getenv('DB_NAME');
-$user = getenv('DB_USER');
-$pass = getenv('DB_PASS');
-$charset = 'utf8mb4';
-
-$dsn = "mysql:host=$host;dbname=$db;charset=$charset";
-$options = [
-    PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
-    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-    PDO::ATTR_EMULATE_PREPARES   => false,
-];
-
-try {
-    $pdo = new PDO($dsn, $user, $pass, $options);
-} catch (\PDOException $e) {
-    throw new \PDOException($e->getMessage(), (int)$e->getCode());
-}
+require_once 'config/db.php';
 
 // 게시글 정보 가져오기
 $post_id = $_GET['id'];
@@ -34,6 +16,11 @@ if (!$post) {
 
 // 댓글 작성 처리
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['comment_content'])) {
+	if (!isset($_SESSION['user_id'])) {  // 로그인 여부 확인
+        echo "<script>alert('로그인이 필요합니다.'); window.location.href='login.php';</script>";
+        exit();
+    }
+
     $comment_content = $_POST['comment_content'];
     $user_id = $_SESSION['user_id'];
 
@@ -48,6 +35,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['comment_content'])) {
 $stmt = $pdo->prepare("SELECT comments.*, users.username FROM comments JOIN users ON comments.user_id = users.id WHERE comments.post_id = ? ORDER BY comments.created_at ASC");
 $stmt->execute([$post_id]);
 $comments = $stmt->fetchAll();
+
+// 파일 정보 가져오기
+$stmt = $pdo->prepare("SELECT * FROM uploads WHERE post_id = ?");
+$stmt->execute([$post_id]);
+$files = $stmt->fetchAll();
 
 
 // 게시판 정보 가져오기
@@ -69,6 +61,15 @@ $board = $stmt->fetch();
     <h1><?php echo htmlspecialchars($post['title']); ?></h1>
     <p><?php echo htmlspecialchars($post['content']); ?></p>
 
+	<?php if (!empty($files)): ?>
+        <h2>첨부 파일</h2>
+        <ul>
+            <?php foreach ($files as $file): ?>
+                <li><a href="<?php echo htmlspecialchars($file['file_path']); ?>" download><?php echo htmlspecialchars($file['file_name']); ?></a></li>
+            <?php endforeach; ?>
+        </ul>
+    <?php endif; ?>
+
 	<?php if(isset($_SESSION['user_id']) and isset($_SESSION['role'])): ?>
 		<?php if ($post['user_id'] == $_SESSION['user_id'] || $_SESSION['role'] === 'admin'): ?>
 			<a href="edit_post.php?id=<?php echo $post_id; ?>">수정</a>
@@ -81,18 +82,30 @@ $board = $stmt->fetch();
 		<li>
 			<p><?php echo htmlspecialchars($comment['content']); ?></p>
 			<span>작성자: <?php echo htmlspecialchars($comment['username']); ?> | 작성일: <?php echo $comment['created_at']; ?></span>
-			<?php if ($comment['user_id'] == $_SESSION['user_id'] || $_SESSION['role'] === 'admin'): ?>
+			<?php if (isset($_SESSION['user_id']) && isset($_SESSION['role']) && ($comment['user_id'] == $_SESSION['user_id'] || $_SESSION['role'] === 'admin')): ?>
 				<a href="delete_comment.php?id=<?php echo $comment['id']; ?>&post_id=<?php echo $post_id; ?>" onclick="return confirm('이 댓글을 삭제하시겠습니까?')">삭제</a>
-				<?php endif; ?>
+			<?php endif; ?>
 			</li>
 		<?php endforeach; ?>
 	</ul>
 			
 			<h2>댓글</h2>
-			<form method="post" action="post.php?id=<?php echo $post_id; ?>">
+			<form method="post" action="post.php?id=<?php echo $post_id; ?>" onsubmit="return checkLoginAndSubmit();">
 				<textarea name="comment_content" rows="3" required></textarea><br>
 				<button type="submit">댓글 작성</button>
 			</form>
+
+	<script>
+        function checkLoginAndSubmit() {
+            <?php if (!isset($_SESSION['user_id'])): ?>
+                alert('로그인이 필요합니다.');
+                window.location.href = 'login.php';
+                return false;
+            <?php endif; ?>
+            return true;
+        }
+    </script>
+	
     <button onclick="location.href='board.php?id=<?= $board['id']; ?>'">목록으로 돌아가기</button>
 </body>
 </html>
