@@ -3,6 +3,14 @@ session_start();
 
 require_once 'config/db.php';
 
+// 사용자 정보 가져오기
+if (isset($_SESSION['user_id'])) {
+    $user_id = $_SESSION['user_id'];
+    $stmt = $pdo->prepare("SELECT username, profile_image FROM users WHERE id = ?");
+    $stmt->execute([$user_id]);
+    $user = $stmt->fetch();
+}
+
 // 게시글 정보 가져오기
 $post_id = $_GET['id'];
 $stmt = $pdo->prepare("SELECT * FROM posts WHERE id = ?");
@@ -42,12 +50,15 @@ $stmt->execute([$post_id]);
 $files = $stmt->fetchAll();
 
 
+// 전체 게시판 목록 가져오기
+$stmt = $pdo->query("SELECT id, name FROM boards ORDER BY name ASC");
+$boards = $stmt->fetchAll();
+
 // 게시판 정보 가져오기
 $board_id = $post['board_id'];
 $stmt = $pdo->prepare("SELECT * FROM boards WHERE id = ?");
 $stmt->execute([$board_id]);
 $board = $stmt->fetch();
-
 ?>
 
 <!DOCTYPE html>
@@ -55,8 +66,19 @@ $board = $stmt->fetch();
 <head>
     <meta charset="UTF-8">
     <title><?php echo htmlspecialchars($post['title']); ?></title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=New+Amsterdam&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="styles/base.css"> 
 </head>
 <body>
+    <?php require_once 'header.php' ?>
+    <div id="main-container">
+        <!-- 사이드바: 프로필 및 게시판 목록 -->
+        <?php require_once 'sidebar.php'?>
+        <section id="content">
+
 	<p><a href="board.php?id=<?php echo $board['id']; ?>"><?= $board['name']; ?></a></p>
     <h1><?php echo htmlspecialchars($post['title']); ?></h1>
     <p><?php echo htmlspecialchars($post['content']); ?></p>
@@ -107,5 +129,7 @@ $board = $stmt->fetch();
     </script>
 	
     <button onclick="location.href='board.php?id=<?= $board['id']; ?>'">목록으로 돌아가기</button>
+        </section>
+    </div>
 </body>
 </html>
