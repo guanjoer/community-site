@@ -1,17 +1,16 @@
 <?php
 session_start();
 
+require_once 'config/db.php';
+
+require_once 'queries.php';
+
 // 로그인 여부 확인
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit();
 }
 
-require_once 'config/db.php';
-
-// 게시판 목록 가져오기
-$stmt = $pdo->query("SELECT id, name FROM boards ORDER BY name ASC");
-$boards = $stmt->fetchAll();
 
 // 게시글 작성 처리
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {

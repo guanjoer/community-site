@@ -3,17 +3,7 @@ session_start();
 
 require_once 'config/db.php';
 
-// 사용자 정보 가져오기
-if (isset($_SESSION['user_id'])) {
-    $user_id = $_SESSION['user_id'];
-    $stmt = $pdo->prepare("SELECT username, profile_image FROM users WHERE id = ?");
-    $stmt->execute([$user_id]);
-    $user = $stmt->fetch();
-}
-
-// 게시판 목록 가져오기
-$stmt = $pdo->query("SELECT id, name FROM boards ORDER BY name ASC");
-$boards = $stmt->fetchAll();
+require_once 'queries.php';
 
 // 전체 글 목록 가져오기 (간단히 최근 10개 글을 가져오는 예시)
 $stmt = $pdo->query("SELECT posts.id, posts.title, posts.created_at, users.username, posts.board_id FROM posts JOIN users ON posts.user_id = users.id ORDER BY posts.created_at DESC LIMIT 10");
@@ -52,21 +42,6 @@ if (isset($_GET['logout'])) {
     <div id="main-container">
         <!-- 사이드바: 프로필 및 게시판 목록 -->
         <?php require_once 'sidebar.php'?>
-
-        <!-- 메인 콘텐츠: 전체 글 목록 -->
-        <!-- <section id="content">
-            <h2 class="header-2"><a href="board.php">전체글 보기</a></h2>
-            <ul>
-                <?php foreach ($posts as $post): ?>
-                    <li>
-                        <a href="post.php?id=<?php echo $post['id']."&board=".$post['board_id']; ?>">
-                            <?php echo htmlspecialchars($post['title']); ?>
-                        </a>
-                        <span>작성자: <?php echo htmlspecialchars($post['username']); ?> | 작성일: <?php echo $post['created_at']; ?></span>
-                    </li>
-                <?php endforeach; ?>
-            </ul>
-        </section> -->
 
         <!-- 메인 콘텐츠: 전체 글 목록 -->
         <section id="content">

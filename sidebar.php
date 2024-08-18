@@ -22,8 +22,8 @@
 	</div>
 	<h2>게시판 목록</h2>
 	<ul>
-		<?php foreach ($boards as $board): ?>
-			<li><a href="board.php?id=<?php echo $board['id']; ?>">📃 <?php echo htmlspecialchars($board['name']); ?></a></li>
+		<?php foreach ($all_boards as $each_board): ?>
+			<li><a href="board.php?id=<?php echo $each_board['id']; ?>">📃 <?php echo htmlspecialchars($each_board['name']); ?></a></li>
 		<?php endforeach; ?>
 	</ul>
 </aside>

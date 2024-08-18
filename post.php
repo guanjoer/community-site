@@ -3,13 +3,7 @@ session_start();
 
 require_once 'config/db.php';
 
-// 사용자 정보 가져오기
-if (isset($_SESSION['user_id'])) {
-    $user_id = $_SESSION['user_id'];
-    $stmt = $pdo->prepare("SELECT username, profile_image FROM users WHERE id = ?");
-    $stmt->execute([$user_id]);
-    $user = $stmt->fetch();
-}
+require_once 'queries.php';
 
 // 게시글 정보 가져오기
 $post_id = $_GET['id'];
@@ -48,11 +42,6 @@ $comments = $stmt->fetchAll();
 $stmt = $pdo->prepare("SELECT * FROM uploads WHERE post_id = ?");
 $stmt->execute([$post_id]);
 $files = $stmt->fetchAll();
-
-
-// 전체 게시판 목록 가져오기
-$stmt = $pdo->query("SELECT id, name FROM boards ORDER BY name ASC");
-$boards = $stmt->fetchAll();
 
 // 게시판 정보 가져오기
 $board_id = $post['board_id'];
