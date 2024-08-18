@@ -43,7 +43,7 @@ if (isset($_GET['logout'])) {
         <div id="logo">
             <a href="index.php">GuanJoer' Community</a>
         </div>
-        <div id="logout">
+        <div class="btn">
             <?php if (isset($_SESSION['user_id'])): ?>
                 <a href="index.php?logout=true">로그아웃</a>
             <?php endif; ?>
@@ -61,17 +61,23 @@ if (isset($_GET['logout'])) {
         <!-- 사이드바: 프로필 및 게시판 목록 -->
         <aside id="sidebar">
             <div class="profile-info">
-                <?php if (isset($_SESSION['user_id'])): ?>
-                <img id="profile-preview" src="uploads/<?php echo !empty($user['profile_image']) ? htmlspecialchars($user['profile_image']) : 'default.png'; ?>" alt="프로필 이미지">
-                <span>아이디: <?php echo htmlspecialchars($user['username']); ?></span>
-                <button onclick="location.href='mypage.php'">마이페이지</button><br>
-                <?php if ($_SESSION['role'] == 'admin'): ?>
-                    <a href="admin/dashboard.php">관리자 대시보드로 이동</a><br>
-                    <a href="admin/create_board.php">새로운 게시판 생성</a>
-                <?php endif; ?>
+                <div class="profile-info-2">
+                    <?php if (isset($_SESSION['user_id'])): ?>
+                        <img id="profile-preview" src="uploads/<?php echo !empty($user['profile_image']) ? htmlspecialchars($user['profile_image']) : 'default.png'; ?>" alt="프로필 이미지">
+                        <span id="username">어서오세요<br><strong><?php echo htmlspecialchars($user['username']); ?></strong>님</span>
+                </div>
+                    <div class="btn login sidebar-btn">
+                        <a href="write_post.php">글쓰기</a>
+                        <a href="mypage.php">마이페이지</a>
+                        <?php if ($_SESSION['role'] == 'admin'): ?>
+                            <a href="admin/dashboard.php">관리자 대시보드로 이동</a><br>
+                        <?php endif; ?>
+                    </div>
         <?php else: ?>
-            <a href="login.php">로그인</a>
-            <a href="signup.php">회원가입</a>
+            <div class="btn login">
+                <a href="login.php">로그인</a>
+                <a href="signup.php">회원가입</a>
+            </div>
         <?php endif; ?>
             </div>
             <h2>게시판 목록</h2>

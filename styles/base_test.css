@@ -26,7 +26,7 @@ body {
 
 }
 
-#logout a{
+.btn a{
 	text-decoration: none;
     background: #e8e8f8;
     color: #2c2c2c;
@@ -36,10 +36,34 @@ body {
     font-weight: bold;
 }
 
-#logout a:hover{
+.btn a:hover{
 	cursor: pointer;
 	background: #f1f1fd;
 }
+
+.login a{
+	display: block;
+	width: 50%;
+    text-align: center;
+    margin: 0 auto 0.5rem auto;
+}
+
+.sidebar-btn {
+	border-bottom: 0.1px solid #cecece;
+    margin-bottom: 1rem;
+}
+
+.sidebar-btn a{
+	width: 85%;
+	color: #fff;
+	background-color: #5a5a5a;
+}
+
+.sidebar-btn a:hover {
+	color: #fff;
+	background-color: #3d3d3d;
+}
+
 
 .nav-items {
 	display: flex;
@@ -56,12 +80,14 @@ body {
 	font-weight: bold;
 }
 #profile-preview {
-	width: 80px;
-	height: 80px;
+	width: 90px;
+	height: 90px;
 	border-radius: 50%;
 	object-fit: cover;
-	margin-right: 10px;
+	/* display: block;
+    margin: 0 auto 0.5rem auto; */
 }
+
 #sidebar {
 	width: 200px;
 	padding: 20px;
@@ -104,8 +130,17 @@ ul li span {
 	color: #555;
 	font-size: 12px;
 }
-.profile-info {
+/* .profile-info {
 	margin-bottom: 20px;
+} */
+
+.profile-info-2 {
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+    margin-bottom: 1.1rem;
+    padding-bottom: 0.8rem;
+    border-bottom: 0.1px solid #e0dfdf;
 }
 .profile-info span {
 	display: block;
@@ -136,8 +171,8 @@ ul li span {
 	padding: 10px 20px;
     border: 1px solid #ddd;
     border-left: none;
-    background: #373737;
-    color: rgb(255 255 255);
+    background: #5a5a5a;
+    color: #fff;
     border-radius: 0 20px 20px 0;
     cursor: pointer;
     font-size: 0.9rem;
