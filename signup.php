@@ -24,6 +24,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     }
 
+    if ($password == "" || $pass_confirm == "") {
+        echo "<script>alert('비밀번호를 입력해주세요.'); window.history.back();</script>";
+        exit();
+    }
+
+    if ($username == "" || $email == "") {
+        echo "<script>alert('아이디 및 이메일을 확인하세요.'); window.history.back();</script>";
+        exit();
+    }
+
     $password_hashed = password_hash($password, PASSWORD_BCRYPT);
 
     // 중복 체크 - 이메일
@@ -60,7 +70,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>회원가입</title>
+    <title>Sign Up</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=New+Amsterdam&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="styles/base.css"> 
+    <link rel="stylesheet" href="styles/sign.css">
+    <link rel="stylesheet" href="styles/signup.css">
     <script>
         function checkUsername() {
             const username = document.getElementById('username').value;
@@ -100,23 +118,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </script>
 </head>
 <body>
-    <h2>회원가입</h2>
-    <form method="post" action="signup.php" onsubmit="return validateForm();">
-        <label for="email">이메일</label>
-        <input type="email" id="email" name="email" required><br>
+    <?php require_once 'header.php' ?>
 
-        <label for="username">아이디</label>
-        <input type="text" id="username" name="username" required>
-        <button type="button" onclick="checkUsername()">중복 확인</button><br>
-
-        <label for="password">비밀번호</label>
-        <input type="password" id="password" name="password" required><br>
-
-        <label for="pass-confirm">비밀번호 확인</label>
-        <input type="password" id="pass-confirm" name="pass-confirm" required><br>
-
-        <button type="submit">가입하기</button>
-    </form>
-    <p>이미 회원이신가요? <a href="login.php">로그인</a></p>
+    <div id="login-container">
+        <h1>Sign up</h1>
+        <form method="post" action="signup.php" onsubmit="return validateForm();">
+            <input type="email" id="email" name="email" placeholder="E-MAIL" required><br>
+        
+        <div class="input-group">
+            <input type="text" id="username" name="username" placeholder="USER NAME" required>
+            <a href="#" class="confirm-btn" onclick="checkUsername()">Confirm Username</a>
+        </div>
+            <input type="password" id="password" name="password" placeholder="PASSWORD" required><br>
+            <input type="password" id="pass-confirm" name="pass-confirm" placeholder="CONFIRM PASSWORD" required><br>
+            <button type="submit">SIGN UP</button>
+        </form>
+        <p id="account-message"><a href="login.php">Do you have already Account?</a></p>
+    </div>
 </body>
 </html>

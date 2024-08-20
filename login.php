@@ -33,22 +33,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>로그인</title>
+    <title>Login</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=New+Amsterdam&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="styles/base.css"> 
+    <link rel="stylesheet" href="styles/sign.css">
 </head>
 <body>
-    <h2>로그인</h2>
-    <?php if (isset($error)): ?>
-        <p style="color:red;"><?php echo htmlspecialchars($error); ?></p>
-    <?php endif; ?>
-    <form method="post" action="login.php">
-        <label for="username">아이디</label>
-        <input type="text" id="username" name="username" required><br>
+    <?php require_once 'header.php' ?>
 
-        <label for="password">비밀번호</label>
-        <input type="password" id="password" name="password" required><br>
-
-        <button type="submit">로그인</button>
-    </form>
-    <p>회원이 아니신가요? <a href="signup.php">회원가입</a></p>
+    <div id="login-container">
+        <h1>Login</h1>
+        <?php if (isset($error)): ?>
+            <p style="color:red;"><?php echo htmlspecialchars($error); ?></p>
+        <?php endif; ?>
+        <form method="post" action="login.php">
+            <!-- <label for="username">아이디</label> -->
+            <input type="text" id="username" name="username" placeholder="USER NAME" required><br>
+    
+            <!-- <label for="password">비밀번호</label> -->
+            <input type="password" id="password" name="password" placeholder="PASSWORD" required><br>
+    
+            <button type="submit">LOGIN</button>
+        </form>
+        <p id="account-message">
+            <a href="signup.php">Do you not have an account yet?</a>
+        </p>
+    </div>
 </body>
 </html>

@@ -6,7 +6,12 @@
 				<img id="profile-preview" src="uploads/<?php echo !empty($user['profile_image']) ? htmlspecialchars($user['profile_image']) : 'default.png'; ?>" alt="프로필 이미지">
 				<span id="username">어서오세요<br><strong><?php echo htmlspecialchars($user['username']); ?></strong>님</span>
 		</div>
-			<div class="btn login sidebar-btn">
+		<div class="btn login sidebar-btn logout-btn">
+            <?php if (isset($_SESSION['user_id'])): ?>
+                <a href="index.php?logout=true">로그아웃</a>
+            <?php endif; ?>
+		</div>
+			<div class="btn login sidebar-btn" id="logout-btn">
 				<a href="write_post.php">글쓰기</a>
 				<a href="mypage.php">마이페이지</a>
 				<?php if ($_SESSION['role'] == 'admin'): ?>
