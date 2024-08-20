@@ -8,7 +8,7 @@
 		</div>
 		<div class="btn login sidebar-btn logout-btn">
             <?php if (isset($_SESSION['user_id'])): ?>
-                <a href="index.php?logout=true">로그아웃</a>
+                <a href="logout_process.php?logout=true">로그아웃</a>
             <?php endif; ?>
 		</div>
 			<div class="btn login sidebar-btn" id="logout-btn">

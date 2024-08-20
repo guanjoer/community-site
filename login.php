@@ -21,10 +21,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['role'] = $user['role'];
         
         // 로그인 성공 시 리다이렉트
-        header("Location: index.php");
+        // header("Location: index.php");
+        $redirect_url = isset($_POST['redirect_url']) ? $_POST['redirect_url'] : 'index.php';
+        header("Location: " . $redirect_url);
         exit();
     } else {
-        $error = "사용자명 또는 비밀번호가 잘못되었습니다.";
+        // $error = "사용자명 또는 비밀번호가 잘못되었습니다.";
+        echo "<script>alert('로그인에 실패했습니다. 다시 시도해주세요.'); history.back();</script>";
+        exit();
     }
 }
 ?>
@@ -51,10 +55,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <p style="color:red;"><?php echo htmlspecialchars($error); ?></p>
         <?php endif; ?>
         <form method="post" action="login.php">
-            <!-- <label for="username">아이디</label> -->
+            <input type="hidden" name="redirect_url" value="<?php echo htmlspecialchars($_SERVER['HTTP_REFERER']); ?>">
             <input type="text" id="username" name="username" placeholder="USER NAME" required><br>
     
-            <!-- <label for="password">비밀번호</label> -->
             <input type="password" id="password" name="password" placeholder="PASSWORD" required><br>
     
             <button type="submit">LOGIN</button>
