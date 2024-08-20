@@ -66,58 +66,59 @@ $board = $stmt->fetch();
     <div id="main-container">
         <!-- 사이드바: 프로필 및 게시판 목록 -->
         <?php require_once 'sidebar.php'?>
+
         <section id="content">
 
-	<p><a href="board.php?id=<?php echo $board['id']; ?>"><?= $board['name']; ?></a></p>
-    <h1><?php echo htmlspecialchars($post['title']); ?></h1>
-    <p><?php echo htmlspecialchars($post['content']); ?></p>
+            <p><a href="board.php?id=<?php echo $board['id']; ?>"><?= $board['name']; ?></a></p>
+            <h1><?php echo htmlspecialchars($post['title']); ?></h1>
+            <p><?php echo htmlspecialchars($post['content']); ?></p>
 
-	<?php if (!empty($files)): ?>
-        <h2>첨부 파일</h2>
-        <ul>
-            <?php foreach ($files as $file): ?>
-                <li><a href="<?php echo htmlspecialchars($file['file_path']); ?>" download><?php echo htmlspecialchars($file['file_name']); ?></a></li>
-            <?php endforeach; ?>
-        </ul>
-    <?php endif; ?>
-
-	<?php if(isset($_SESSION['user_id']) and isset($_SESSION['role'])): ?>
-		<?php if ($post['user_id'] == $_SESSION['user_id'] || $_SESSION['role'] === 'admin'): ?>
-			<a href="edit_post.php?id=<?php echo $post_id; ?>">수정</a>
-			<a href="delete_post.php?id=<?php echo $post_id; ?>" onclick="return confirm('이 게시글을 삭제하시겠습니까?')">삭제</a>
-		<?php endif; ?>
-	<?php endif; ?>
-	
-	<ul>
-		<?php foreach ($comments as $comment): ?>
-		<li>
-			<p><?php echo htmlspecialchars($comment['content']); ?></p>
-			<span>작성자: <?php echo htmlspecialchars($comment['username']); ?> | 작성일: <?php echo $comment['created_at']; ?></span>
-			<?php if (isset($_SESSION['user_id']) && isset($_SESSION['role']) && ($comment['user_id'] == $_SESSION['user_id'] || $_SESSION['role'] === 'admin')): ?>
-				<a href="delete_comment.php?id=<?php echo $comment['id']; ?>&post_id=<?php echo $post_id; ?>" onclick="return confirm('이 댓글을 삭제하시겠습니까?')">삭제</a>
-			<?php endif; ?>
-			</li>
-		<?php endforeach; ?>
-	</ul>
-			
-			<h2>댓글</h2>
-			<form method="post" action="post.php?id=<?php echo $post_id; ?>" onsubmit="return checkLoginAndSubmit();">
-				<textarea name="comment_content" rows="3" required></textarea><br>
-				<button type="submit">댓글 작성</button>
-			</form>
-
-	<script>
-        function checkLoginAndSubmit() {
-            <?php if (!isset($_SESSION['user_id'])): ?>
-                alert('로그인이 필요합니다.');
-                window.location.href = 'login.php';
-                return false;
+            <?php if (!empty($files)): ?>
+                <h2>첨부 파일</h2>
+                <ul>
+                    <?php foreach ($files as $file): ?>
+                        <li><a href="<?php echo htmlspecialchars($file['file_path']); ?>" download><?php echo htmlspecialchars($file['file_name']); ?></a></li>
+                    <?php endforeach; ?>
+                </ul>
             <?php endif; ?>
-            return true;
-        }
-    </script>
-	
-    <button onclick="location.href='board.php?id=<?= $board['id']; ?>'">목록으로 돌아가기</button>
+
+            <?php if(isset($_SESSION['user_id']) and isset($_SESSION['role'])): ?>
+                <?php if ($post['user_id'] == $_SESSION['user_id'] || $_SESSION['role'] === 'admin'): ?>
+                    <a href="edit_post.php?id=<?php echo $post_id; ?>">수정</a>
+                    <a href="delete_post.php?id=<?php echo $post_id; ?>" onclick="return confirm('이 게시글을 삭제하시겠습니까?')">삭제</a>
+                <?php endif; ?>
+            <?php endif; ?>
+            
+            <ul>
+                <?php foreach ($comments as $comment): ?>
+                <li>
+                    <p><?php echo htmlspecialchars($comment['content']); ?></p>
+                    <span>작성자: <?php echo htmlspecialchars($comment['username']); ?> | 작성일: <?php echo $comment['created_at']; ?></span>
+                    <?php if (isset($_SESSION['user_id']) && isset($_SESSION['role']) && ($comment['user_id'] == $_SESSION['user_id'] || $_SESSION['role'] === 'admin')): ?>
+                        <a href="delete_comment.php?id=<?php echo $comment['id']; ?>&post_id=<?php echo $post_id; ?>" onclick="return confirm('이 댓글을 삭제하시겠습니까?')">삭제</a>
+                    <?php endif; ?>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+                    
+                    <h2>댓글</h2>
+                    <form method="post" action="post.php?id=<?php echo $post_id; ?>" onsubmit="return checkLoginAndSubmit();">
+                        <textarea name="comment_content" rows="3" required></textarea><br>
+                        <button type="submit">댓글 작성</button>
+                    </form>
+
+            <script>
+                function checkLoginAndSubmit() {
+                    <?php if (!isset($_SESSION['user_id'])): ?>
+                        alert('로그인이 필요합니다.');
+                        window.location.href = 'login.php';
+                        return false;
+                    <?php endif; ?>
+                    return true;
+                }
+            </script>
+            
+            <button onclick="location.href='board.php?id=<?= $board['id']; ?>'">목록으로 돌아가기</button>
         </section>
     </div>
 </body>

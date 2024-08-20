@@ -175,9 +175,10 @@ ul li span {
 }
 
 #search-bar input::placeholder {
-	color: rgb(36, 36, 36);
-	font-size: 1.2em;
+	color: rgb(76, 76, 76);
+	font-size: 1em;
 	font-weight: 500;
+	font-style: italic;
   }
 
 #search-bar button {
