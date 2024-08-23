@@ -44,6 +44,7 @@ if (isset($_GET['id'])) {
     <link href="https://fonts.googleapis.com/css2?family=New+Amsterdam&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="styles/base.css"> 
+    <link rel="stylesheet" href="styles/main.css">
 
     <?php if(isset($_GET['id'])): ?>
         <title><?php echo htmlspecialchars($board['name']); ?> - 게시판</title>
@@ -63,43 +64,70 @@ if (isset($_GET['id'])) {
 
     <div id="main-container">
         <?php require_once 'sidebar.php'?>
-        <section id="content">
 
+        <section id="content">
             <?php if(isset($_GET['id'])): ?>
                 <h1><?php echo htmlspecialchars($board['name']); ?></h1>
-                <p><?php echo htmlspecialchars($board['description']); ?></p>
-                <h2>게시글 목록</h2>
             <?php else: ?>
                 <h2>전체글</h2>
             <?php endif; ?>
             
-            <ul>
-                <?php if (isset($_GET['id']) && $posts): ?>
+            <table>
+                <thead>
+                    <tr>
+                        <th>번호</th>
+                        <th>제목</th>
+                        <th>글쓴이</th>
+                        <th>작성일</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php if (isset($_GET['id']) && $posts): ?>
+                    <?php $counter = count($posts); ?>
                     <?php foreach ($posts as $post): ?>
-                        <li>
-                            <a href="post.php?id=<?php echo $post['id']; ?>">
-                                <?php echo htmlspecialchars($post['title']); ?>
-                            </a>
-                            <br>
-                            <span>작성자: <?php echo htmlspecialchars($post['username']); ?> | 작성일: <?php echo $post['created_at']; ?></span>
-                        </li>
+                        <tr>
+                            <td><?php echo $counter; ?></td>
+                            <td>
+                                <a href="post.php?id=<?php echo $post['id']; ?>">
+                                        <?php echo htmlspecialchars($post['title']); ?>
+                                </a>
+                            </td>
+                            <td>
+                                <?php echo htmlspecialchars($post['username']); ?>
+                            </td>
+                            <td>
+                                <?php echo date('Y-m-d H:i', strtotime($post['created_at'])); ?>
+                            </td>
+                        </tr>
+                        <?php $counter--; ?>
                     <?php endforeach; ?>
-                <?php elseif (!isset($_GET['id']) && $all_posts): ?>
-                    <?php foreach ($all_posts as $post): ?>
-                        <li>
-                            <a href="post.php?id=<?php echo $post['id']; ?>">
-                                <?php echo htmlspecialchars($post['title']); ?>
-                            </a>
-                            <br>
-                            <span>작성자: <?php echo htmlspecialchars($post['username']); ?> | 작성일: <?php echo $post['created_at']; ?></span>
-                        </li>
-                    <?php endforeach; ?>
+                    </tbody>
+
+                    <tbody>
+                        <?php elseif (!isset($_GET['id']) && $all_posts): ?>
+                            <?php $counter = count($all_posts); ?>
+                            <?php foreach ($all_posts as $post): ?>
+                                <tr>
+                                    <td><?php echo $counter ?></td>
+                                    <td>
+                                        <a href="post.php?id=<?php echo $post['id']; ?>">
+                                            <?php echo htmlspecialchars($post['title']); ?>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <?php echo htmlspecialchars($post['username']); ?>
+                                    </td>
+                                    <td>
+                                        <?php echo date('Y-m-d H:i', strtotime($post['created_at'])); ?>
+                                    </td>
+                                </tr>
+                                <?php $counter--; ?>
+                            <?php endforeach; ?>
+                    </tbody>
                 <?php else: ?>
                     <p>게시글이 없습니다.</p>
                 <?php endif; ?>
-            </ul>
-
-            <button onclick="location.href='index.php'">홈으로 돌아가기</button>
+                </table>
             </section>
         </div>
 </body>

@@ -3,6 +3,8 @@ session_start();
 
 require_once 'config/db.php';
 
+require_once 'queries.php';
+
 // 사용자 정보 가져오기
 $user_id = $_SESSION['user_id'];
 $stmt = $pdo->prepare("SELECT username, email, profile_image, password FROM users WHERE id = ?");
@@ -83,7 +85,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>마이페이지</title>
+    <title>Account Info</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=New+Amsterdam&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="styles/base.css"> 
+    <link rel="stylesheet" href="styles/mypage.css">
     <script>
         function previewImage(event) {
             const reader = new FileReader();
@@ -96,32 +105,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </script>
 </head>
 <body>
-    <h1>마이페이지</h1>
+    <?php require_once 'header.php' ?>
+
+    <div id="main-container">
+        <?php require_once 'sidebar.php'?>
+
+        <section id="content">
+        <h1>Account Info</h1>
 
     <form method="post" action="mypage.php" enctype="multipart/form-data">
-        <label for="username">아이디</label>
+        <label for="username">USER NAME</label>
         <input type="text" id="username" name="username" value="<?php echo htmlspecialchars($user['username']); ?>" required><br>
 
-        <label for="email">이메일</label>
+        <label for="email">E-MAIL</label>
         <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($user['email']); ?>" required><br>
 
-        <label for="profile_image">프로필 이미지</label><br>
+        <label for="profile_image">PROFILE IMAGE</label><br>
         <img id="profile-preview" src="uploads/<?php echo !empty($user['profile_image']) ? htmlspecialchars($user['profile_image']) : 'default.png'; ?>" alt="프로필 이미지" width="100" height="100"><br>
         <input type="file" id="profile_image" name="profile_image" accept="image/*" onchange="previewImage(event)"><br>
 
-        <h2>비밀번호 변경</h2>
-        <label for="current_password">현재 비밀번호</label>
-        <input type="password" id="current_password" name="current_password"><br>
+        <h2>CHAGE PASSWORD</h2>
+        <label for="current_password">Current Password</label>
+        <input type="password" id="current_password" name="current_password" placeholder="Enter a current password"><br>
 
-        <label for="new_password">새 비밀번호</label>
-        <input type="password" id="new_password" name="new_password"><br>
+        <label for="new_password">New Password</label>
+        <input type="password" id="new_password" name="new_password" placeholder="Enter a new password"><br>
 
-        <label for="confirm_password">새 비밀번호 확인</label>
-        <input type="password" id="confirm_password" name="confirm_password"><br>
+        <label for="confirm_password">Confirm New Password</label>
+        <input type="password" id="confirm_password" name="confirm_password" placeholder="Enter a confirm new password"><br>
 
-        <button type="submit">정보 수정</button>
+        <button type="submit">Update</button>
     </form>
-
-    <button onclick="location.href='index.php'">홈으로 돌아가기</button>
+    </section>
+    </div>
 </body>
 </html>

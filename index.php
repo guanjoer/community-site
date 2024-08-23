@@ -5,16 +5,11 @@ require_once 'config/db.php';
 
 require_once 'queries.php';
 
-// 전체 글 목록 가져오기 (간단히 최근 10개 글을 가져오는 예시)
-$stmt = $pdo->query("SELECT posts.id, posts.title, posts.created_at, users.username, posts.board_id FROM posts JOIN users ON posts.user_id = users.id ORDER BY posts.created_at DESC LIMIT 10");
+// 전체 글 목록 가져오기 // 최근 글 15개
+$stmt = $pdo->query("SELECT posts.id, posts.title, posts.created_at, users.username, posts.board_id FROM posts JOIN users ON posts.user_id = users.id ORDER BY posts.created_at DESC LIMIT 15");
 $posts = $stmt->fetchAll();
 
-// 로그아웃 처리
-if (isset($_GET['logout'])) {
-    session_destroy(); // 모든 세션 데이터 삭제
-    header("Location: index.php"); // 메인 페이지로 리다이렉트
-    exit();
-}
+
 ?>
 
 <!DOCTYPE html>

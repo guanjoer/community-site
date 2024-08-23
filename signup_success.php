@@ -17,12 +17,17 @@ $username = $_SESSION['username'];
 <head>
     <meta charset="UTF-8">
     <title>회원가입 성공</title>
+
+    <link rel="stylesheet" href="styles/signup_success.css">
 </head>
 <body>
-    <h1><?php echo htmlspecialchars($username); ?>님, 회원가입을 축하합니다!</h1>
-    <p>이제 로그인하여 사이트를 이용할 수 있습니다.</p>
-    
-    <button onclick="location.href='login.php'">로그인 하기</button>
-    <button onclick="location.href='index.php'">홈으로 가기</button>
+    <div id="main-container">
+        <h1><?php echo htmlspecialchars($username); ?>님, 회원가입을 축하합니다!</h1>
+        <p>이제 로그인하여 사이트를 이용할 수 있습니다.</p>
+        
+        <button onclick="location.href='login.php'">로그인 하기</button>
+        <button onclick="location.href='index.php'">홈으로 가기</button>
+    </div>
+
 </body>
 </html>
