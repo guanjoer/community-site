@@ -97,8 +97,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         function previewImage(event) {
             const reader = new FileReader();
             reader.onload = function(){
-                const output = document.getElementById('profile-preview');
+                const output = document.getElementById('profile-preview-2');
                 output.src = reader.result;
+                output.style.borderRadius = '50%';
+                output.style.objectFit = 'cover';
             }
             reader.readAsDataURL(event.target.files[0]);
         }
@@ -121,7 +123,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($user['email']); ?>" required><br>
 
         <label for="profile_image">PROFILE IMAGE</label><br>
-        <img id="profile-preview" src="uploads/<?php echo !empty($user['profile_image']) ? htmlspecialchars($user['profile_image']) : 'default.png'; ?>" alt="프로필 이미지" width="100" height="100"><br>
+        <img id="profile-preview-2" src="uploads/<?php echo !empty($user['profile_image']) ? htmlspecialchars($user['profile_image']) : 'default.png'; ?>" alt="프로필 이미지" width="100" height="100"><br>
         <input type="file" id="profile_image" name="profile_image" accept="image/*" onchange="previewImage(event)"><br>
 
         <h2>CHAGE PASSWORD</h2>

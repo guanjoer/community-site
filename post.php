@@ -11,10 +11,19 @@ $stmt = $pdo->prepare("SELECT * FROM posts WHERE id = ?");
 $stmt->execute([$post_id]);
 $post = $stmt->fetch();
 
+
+// 유저 정보 가져오기
+
+$post_user_id = $post['user_id'];
+$stmt = $pdo->prepare("SELECT * FROM users WHERE id = ?");
+$stmt->execute([$post_user_id]);
+$post_user = $stmt->fetch();
+
 if (!$post) {
     echo "<script>alert('존재하지 않는 게시글입니다.'); window.location.href='index.php';</script>";
     exit();
 }
+
 
 // 댓글 작성 처리
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['comment_content'])) {
@@ -60,6 +69,7 @@ $board = $stmt->fetch();
     <link href="https://fonts.googleapis.com/css2?family=New+Amsterdam&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="styles/base.css"> 
+    <link rel="stylesheet" href="styles/post.css">
 </head>
 <body>
     <?php require_once 'header.php' ?>
@@ -68,10 +78,13 @@ $board = $stmt->fetch();
         <?php require_once 'sidebar.php'?>
 
         <section id="content">
-
-            <p><a href="board.php?id=<?php echo $board['id']; ?>"><?= $board['name']; ?></a></p>
+            <p class="board-name"><a href="board.php?id=<?php echo $board['id']; ?>"><?= $board['name']; ?></a></p>
             <h1><?php echo htmlspecialchars($post['title']); ?></h1>
-            <p><?php echo htmlspecialchars($post['content']); ?></p>
+            <?php if (isset($_SESSION['user_id'])): ?>
+				<img id="post-profile" src="uploads/<?php echo !empty($post_user['profile_image']) ? htmlspecialchars($post_user['profile_image']) : 'default.png'; ?>" alt="프로필 이미지">
+            <?php endif; ?>
+            <p><?php echo $post_user['username'] ?></p>
+            <p class="post-content"><?php echo htmlspecialchars($post['content']); ?></p>
 
             <?php if (!empty($files)): ?>
                 <h2>첨부 파일</h2>

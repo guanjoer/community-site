@@ -59,3 +59,8 @@ button {
 button:hover {
 	background-color: #6b6b6b;
 }
+
+#profile-preview-2 {
+	border-radius: 50%;
+    object-fit: cover;
+}
