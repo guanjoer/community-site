@@ -27,6 +27,7 @@
 	</div>
 	<h2>게시판 목록</h2>
 	<ul>
+			<li><a href="board.php">📃 ALL POSTS</a></li>
 		<?php foreach ($all_boards as $each_board): ?>
 			<li><a href="board.php?id=<?php echo $each_board['id']; ?>">📃 <?php echo htmlspecialchars($each_board['name']); ?></a></li>
 		<?php endforeach; ?>

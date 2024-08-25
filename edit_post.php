@@ -50,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             if (!move_uploaded_file($_FILES['uploaded_file']['tmp_name'], $new_file_path)) {
                 $upload_success = false;
-                echo "<script>alert('파일 업로드 중 오류가 발생했습니다.');</script>";
+                echo "<script>alert('파일 업로드 중 오류가 발생했습니다.'); history.back();</script>";
             } else {
                 // 기존 파일이 있으면 삭제
                 if ($file && file_exists($file['file_path'])) {
@@ -59,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         } else {
             $upload_success = false;
-            echo "<script>alert('허용되지 않은 파일 형식입니다.');</script>";
+            echo "<script>alert('허용되지 않은 파일 형식입니다.'); history.back(); </script>";
         }
     }
 
@@ -93,29 +93,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <title>게시글 수정</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=New+Amsterdam&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="styles/base.css">
+    <link rel="stylesheet" href="styles/write.css">
+    <link rel="stylesheet" href="styles/edit_post.css">
 </head>
 <body>
-    <h1>게시글 수정</h1>
+    <?php require_once 'header.php' ?>
 
-    <form method="post" action="edit_post.php?id=<?php echo htmlspecialchars($post_id); ?>" enctype="multipart/form-data">
-        <label for="title">제목</label>
-        <input type="text" id="title" name="title" value="<?php echo htmlspecialchars($post['title']); ?>" required><br>
+    <div id="create-post-content">
+        <h1>EDIT POST</h1>
 
-        <label for="content">내용</label>
-        <textarea id="content" name="content" rows="10" required><?php echo htmlspecialchars($post['content']); ?></textarea><br>
+        <form method="post" action="edit_post.php?id=<?php echo htmlspecialchars($post_id); ?>" enctype="multipart/form-data">
+            <label for="title">TITLE</label>
+            <input type="text" id="title" name="title" value="<?php echo htmlspecialchars($post['title']); ?>" required>
 
-        <label for="uploaded_file">파일 업로드 (PNG, JPG, PDF, XLSX)</label><br>
-        <?php if ($file): ?>
-            <p>현재 파일: <a href="<?php echo htmlspecialchars($file['file_path']); ?>" download><?php echo htmlspecialchars($file['file_name']); ?></a></p>
-            <input type="file" id="uploaded_file" name="uploaded_file"><br>
-            <p>* 파일을 새로 업로드하면 기존 파일이 교체됩니다.</p>
-        <?php else: ?>
-            <input type="file" id="uploaded_file" name="uploaded_file"><br>
-        <?php endif; ?>
+            <label for="content">CONTENT</label>
+            <textarea id="content" name="content" rows="10" required><?php echo htmlspecialchars($post['content']); ?></textarea>
 
-        <button type="submit">수정하기</button>
-    </form>
+            <div id="upload-file">
+                <label for="uploaded_file">UPLOADED FILE</label>
+                <?php if ($file): ?>
+                    <p><a href="<?php echo htmlspecialchars($file['file_path']); ?>" download><?php echo htmlspecialchars($file['file_name']); ?></a></p>
+                    <input type="file" id="uploaded_file" name="uploaded_file">
+                <?php else: ?>
+                    <input type="file" id="uploaded_file" name="uploaded_file">
+            </div>
+            <?php endif; ?>
 
-    <button onclick="location.href='post.php?id=<?php echo $post_id; ?>'">게시글로 돌아가기</button>
+            <button type="submit">UPDATE</button>
+        </form>
+    </div>
+
+    <button id="back-btn" onclick="location.href='post.php?id=<?php echo $post_id; ?>'">BACK TO THE POST</button>
 </body>
 </html>

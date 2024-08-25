@@ -78,13 +78,18 @@ $board = $stmt->fetch();
         <?php require_once 'sidebar.php'?>
 
         <section id="content">
-            <p class="board-name"><a href="board.php?id=<?php echo $board['id']; ?>"><?= $board['name']; ?></a></p>
+            <p class="board-name"><a href="board.php?id=<?php echo $board['id']; ?>"><?= $board['name']; ?> ></a></p>
             <h1><?php echo htmlspecialchars($post['title']); ?></h1>
             <?php if (isset($_SESSION['user_id'])): ?>
+                <div class="post-profile-info">
 				<img id="post-profile" src="uploads/<?php echo !empty($post_user['profile_image']) ? htmlspecialchars($post_user['profile_image']) : 'default.png'; ?>" alt="프로필 이미지">
             <?php endif; ?>
-            <p><?php echo $post_user['username'] ?></p>
-            <p class="post-content"><?php echo htmlspecialchars($post['content']); ?></p>
+                    <div class="post-profile-info-2">
+                    <p><?php echo $post_user['username'] ?></p>
+                    <span><?php echo date('Y-m-d H:i', strtotime($post_user['created_at'])); ?></span>
+                    </div>
+                </div>
+                <p class="post-content"><?php echo htmlspecialchars($post['content']); ?></p>
 
             <?php if (!empty($files)): ?>
                 <h2>첨부 파일</h2>
@@ -94,30 +99,35 @@ $board = $stmt->fetch();
                     <?php endforeach; ?>
                 </ul>
             <?php endif; ?>
-
+                
             <?php if(isset($_SESSION['user_id']) and isset($_SESSION['role'])): ?>
                 <?php if ($post['user_id'] == $_SESSION['user_id'] || $_SESSION['role'] === 'admin'): ?>
+                    <div class="post-btn">
                     <a href="edit_post.php?id=<?php echo $post_id; ?>">수정</a>
                     <a href="delete_post.php?id=<?php echo $post_id; ?>" onclick="return confirm('이 게시글을 삭제하시겠습니까?')">삭제</a>
+                </div>
                 <?php endif; ?>
             <?php endif; ?>
-            
+
+            <h2 id="comment-title-2">댓글</h2>
             <ul>
                 <?php foreach ($comments as $comment): ?>
                 <li>
                     <p><?php echo htmlspecialchars($comment['content']); ?></p>
-                    <span>작성자: <?php echo htmlspecialchars($comment['username']); ?> | 작성일: <?php echo $comment['created_at']; ?></span>
+                    <span class="comment-display">작성자: <strong><?php echo htmlspecialchars($comment['username']); ?></strong> | 작성일: <strong><?php echo date('Y-m-d H:i', strtotime($post_user['created_at'])); ?></strong></span>
                     <?php if (isset($_SESSION['user_id']) && isset($_SESSION['role']) && ($comment['user_id'] == $_SESSION['user_id'] || $_SESSION['role'] === 'admin')): ?>
+                        <div id="comment-delete-btn">
                         <a href="delete_comment.php?id=<?php echo $comment['id']; ?>&post_id=<?php echo $post_id; ?>" onclick="return confirm('이 댓글을 삭제하시겠습니까?')">삭제</a>
+                        </div>
                     <?php endif; ?>
                     </li>
                 <?php endforeach; ?>
             </ul>
                     
-                    <h2>댓글</h2>
+                    <!-- <h2>댓글 작성</h2> -->
                     <form method="post" action="post.php?id=<?php echo $post_id; ?>" onsubmit="return checkLoginAndSubmit();">
                         <textarea name="comment_content" rows="3" required></textarea><br>
-                        <button type="submit">댓글 작성</button>
+                        <button class="post-btn post-btn2" type="submit">댓글 작성</button>
                     </form>
 
             <script>
@@ -131,7 +141,7 @@ $board = $stmt->fetch();
                 }
             </script>
             
-            <button onclick="location.href='board.php?id=<?= $board['id']; ?>'">목록으로 돌아가기</button>
+            <button class="list-btn" onclick="location.href='board.php?id=<?= $board['id']; ?>'">목록</button>
         </section>
     </div>
 </body>

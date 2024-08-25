@@ -3,11 +3,13 @@ session_start();
 
 require_once 'config/db.php';
 
+require_once 'queries.php';
+
 // 검색어 가져오기
-$query = isset($_GET['query']) ? $_GET['query'] : '';
+$query = isset($_GET['q']) ? $_GET['q'] : '';
 
 if (empty($query)) {
-    echo "<script>alert('검색어를 입력하세요.'); window.location.href='index.php';</script>";
+    echo "<script>alert('검색어를 입력하세요.'); history.back();</script>";
     exit();
 }
 
@@ -40,21 +42,47 @@ if (!empty($board_ids)) {
 <head>
     <meta charset="UTF-8">
     <title>검색 결과</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=New+Amsterdam&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="styles/base.css">
+    <link rel="stylesheet" href="styles/main.css">
 </head>
 <body>
-    <header>
-        <h1>검색 결과</h1>
-        <a href="index.php">메인 페이지로 돌아가기</a>
-    </header>
+    <?php require_once 'header.php' ?>
 
-    <section>
+    <nav id="search-bar">
+        <form method="get" action="search.php">
+            <input type="text" name="q" placeholder="검색어를 입력하세요" required>
+            <button type="submit">검색</button>
+        </form>
+    </nav>
+
+    <div id="main-container">
+        <?php require_once 'sidebar.php'?>
+        <section id="content">
+
         <h2>검색어: "<?php echo htmlspecialchars($query); ?>"</h2>
         <?php if (count($posts) > 0): ?>
-            <ul>
+            <table>
+                <thead>
+                    <tr>
+                        <th>번호</th>
+                        <th>제목</th>
+                        <th>글쓴이</th>
+                        <th>작성일</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php 
+                    $counter = count($posts); ?>
+            
                 <?php foreach ($posts as $post): ?>
                     <?php
                     // 게시글의 게시판 이름을 가져오기
-                    $board_name = '알 수 없음';
+                    $board_name = 'none';
                     foreach ($boards as $board) {
                         if ($board['id'] == $post['board_id']) {
                             $board_name = $board['name'];
@@ -62,17 +90,29 @@ if (!empty($board_ids)) {
                         }
                     }
                     ?>
-                    <li>
-                        <a href="post.php?id=<?php echo $post['id']; ?>&board=<?php echo $post['board_id']; ?>">
-                            <?php echo htmlspecialchars($post['title']); ?>
-                        </a><br>
-                        <span>게시판: <?php echo htmlspecialchars($board_name); ?> | 작성자: <?php echo htmlspecialchars($post['username']); ?> | 작성일: <?php echo $post['created_at']; ?></span>
-                    </li>
-                <?php endforeach; ?>
-            </ul>
+                    <tr>
+                        <td>
+                            <?php echo $counter; ?>
+                        </td>
+                        <td>
+                            <a href="post.php?id=<?php echo $post['id']; ?>&board=<?php echo $post['board_id']; ?>">
+                                <?php echo htmlspecialchars($post['title']); ?>
+                            </a>
+                        </td>
+                        <td>
+                            <?php echo htmlspecialchars($post['username']); ?>
+                        </td>
+                        <td>
+                            <?php echo date('Y-m-d H:i', strtotime($post['created_at'])); ?>
+                        </td>
+                    </tr>
+                    <?php $counter--; endforeach; ?>
+                </tbody>
+            </table>
         <?php else: ?>
             <p>검색 결과가 없습니다.</p>
         <?php endif; ?>
-    </section>
+        </section>
+        </div>
 </body>
 </html>

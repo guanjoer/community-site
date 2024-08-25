@@ -124,10 +124,9 @@ body {
 	background-color: #fff;
 	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 	border-radius: 10px;
-	height: auto;
+	/* height: auto; */
     aspect-ratio: 16 / 9;
 	min-width: 500px;
-    overflow: hidden;
 }
 #main-container {
 	display: flex;

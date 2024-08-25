@@ -29,7 +29,7 @@ $posts = $stmt->fetchAll();
 
     <nav id="search-bar">
         <form method="get" action="search.php">
-            <input type="text" name="query" placeholder="검색어를 입력하세요" required>
+            <input type="text" name="q" placeholder="검색어를 입력하세요" required>
             <button type="submit">검색</button>
         </form>
     </nav>
