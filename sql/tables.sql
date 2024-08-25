@@ -1,4 +1,4 @@
--- users 테이블 생성
+-- 사용자 정보
 CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(50) NOT NULL UNIQUE,
@@ -9,7 +9,7 @@ CREATE TABLE users (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- boards 테이블 생성
+-- 게시판
 CREATE TABLE boards (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL UNIQUE,
@@ -17,7 +17,7 @@ CREATE TABLE boards (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- posts 테이블 생성
+-- 게시글
 CREATE TABLE posts (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
@@ -29,7 +29,7 @@ CREATE TABLE posts (
     FOREIGN KEY (board_id) REFERENCES boards(id) ON DELETE CASCADE
 );
 
--- comments 테이블 생성
+-- 댓글
 CREATE TABLE comments (
     id INT AUTO_INCREMENT PRIMARY KEY,
     post_id INT NOT NULL,
@@ -40,10 +40,11 @@ CREATE TABLE comments (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
--- files 테이블 생성
-CREATE TABLE files (
+-- 업로드한 파일
+CREATE TABLE uploads (
     id INT AUTO_INCREMENT PRIMARY KEY,
     post_id INT NOT NULL,
+    file_name VARCHAR(255) NOT NULL,
     file_path VARCHAR(255) NOT NULL,
     uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE
