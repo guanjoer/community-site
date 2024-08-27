@@ -1,3 +1,3 @@
 # Community Web Site
 
-Community Web Site using PHP and MySQL
+Community Web Site created using PHP and MySQL
