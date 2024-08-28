@@ -2,7 +2,6 @@
 session_start();
 
 require_once 'config/db.php';
-
 require_once 'queries.php';
 
 // 검색어 가져오기
@@ -12,6 +11,13 @@ if (empty($query)) {
     echo "<script>alert('검색어를 입력하세요.'); history.back();</script>";
     exit();
 }
+
+if (strtolower($query) == "post") {
+    echo "<script>alert('post는 충돌이 발생하여 금지된 단어입니다. 다른 단어로 시도해주세요.'); history.back();</script>";
+    // $query = `post`;
+}
+
+$search_query = "%" . strtolower($query) . "%";
 
 // 검색어에 대한 게시글 검색
 $stmt = $pdo->prepare("
@@ -25,15 +31,13 @@ $search_query = "%" . $query . "%";
 $stmt->execute([$search_query, $search_query]);
 $posts = $stmt->fetchAll();
 
-// 게시판 목록 가져오기 (검색 결과에 포함된 게시글의 게시판)
 $board_ids = array_unique(array_column($posts, 'board_id')); // board_id 필드의 값들만 새로운 배열로 생성 및 중복 제거
+$boards = [];  // 빈 배열로 초기화
 if (!empty($board_ids)) {
     $in  = str_repeat('?,', count($board_ids) - 1) . '?'; // board_id의 개수만큼 ? 자리표시자 생성
     $stmt = $pdo->prepare("SELECT id, name FROM boards WHERE id IN ($in)");
     $stmt->execute($board_ids);
     $boards = $stmt->fetchAll();
-} else {
-    $boards = [];
 }
 ?>
 

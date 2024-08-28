@@ -4,7 +4,7 @@
 		<div class="profile-info-2">
 			<?php if (isset($_SESSION['user_id'])): ?>
 				<img id="profile-preview" src="uploads/<?php echo !empty($user['profile_image']) ? htmlspecialchars($user['profile_image']) : 'default.png'; ?>" alt="프로필 이미지">
-				<span id="username">어서오세요<br><strong><?php echo htmlspecialchars($user['username']); ?></strong>님</span>
+				<span id="username">어서오세요<br><strong><?php echo htmlspecialchars($user['username']); ?></strong> 님</span>
 		</div>
 		<div class="btn login sidebar-btn logout-btn">
             <?php if (isset($_SESSION['user_id'])): ?>
