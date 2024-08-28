@@ -19,8 +19,16 @@ $boards = $stmt->fetchAll();
 <head>
     <meta charset="UTF-8">
     <title>관리자 대시보드</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=New+Amsterdam&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="../styles/base.css"> 
 </head>
 <body>
+    <?php require_once 'admin_header.php' ?>
+
     <h1>관리자 대시보드</h1>
 
     <button onclick="location.href='create_board.php'">새 게시판 생성</button>
