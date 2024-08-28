@@ -9,10 +9,21 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
 
 require_once '../config/db.php';
 
-// 게시판 목록 가져오기
-$stmt = $pdo->query("SELECT * FROM boards ORDER BY created_at DESC");
-$boards = $stmt->fetchAll();
+require_once '../queries.php';
+
+// 유저 수
+$stmt = $pdo->query("SELECT COUNT(*)  FROM users");
+$user_count = $stmt->fetchColumn();
+
+// 게시판 수
+$stmt = $pdo->query("SELECT COUNT(*)  FROM boards");
+$board_count = $stmt->fetchColumn();
+
+// 게시글
+$stmt = $pdo->query("SELECT COUNT(*)  FROM posts");
+$post_count = $stmt->fetchColumn();
 ?>
+
 
 <!DOCTYPE html>
 <html lang="ko">
@@ -24,26 +35,39 @@ $boards = $stmt->fetchAll();
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=New+Amsterdam&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="../styles/base.css"> 
+    <link rel="stylesheet" href="../styles/base.css">
+    <link rel="stylesheet" href="styles/dashboard.css">
 </head>
 <body>
     <?php require_once 'admin_header.php' ?>
 
-    <h1>관리자 대시보드</h1>
+    <div id="main-container">
+        <?php require_once 'admin_sidebar.php'?>
+        <section id="content">
+        <h1>관리자 > 대시보드</h1>
 
-    <button onclick="location.href='create_board.php'">새 게시판 생성</button>
+        <div id="info">
+            <div class="info-content">
+                <h2 class="content-title">
+                    <a href="users.php">사용자 수</a>
+                </h2>
+                <span class="content-count"><?= $user_count ?></span> </p>
+            </div>
+            <div class="info-content">
+                <h2 class="content-title">
+                    <a href="posts.php">게시글 수</a>
+                </h2>
+                <span class="content-count"><?= $post_count ?></span>
+            </div>
+            <div class="info-content">
+                <h2 class="content-title">
+                    <a href="boards.php">게시판 수</a>
+                </h2>
+                <span class="content-count"><?= $board_count ?></span>
+            </div>
+        </div>
 
-    <h2>게시판 목록</h2>
-    <ul>
-        <?php foreach ($boards as $board): ?>
-            <li>
-                <?php echo htmlspecialchars($board['name']); ?> - <?php echo htmlspecialchars($board['description']); ?>
-                <a href="edit_board.php?id=<?php echo $board['id']; ?>">수정</a> |
-                <a href="delete_board.php?id=<?php echo $board['id']; ?>" onclick="return confirm('이 게시판을 삭제하시겠습니까?')">삭제</a>
-            </li>
-        <?php endforeach; ?>
-    </ul>
-
-    <button onclick="location.href='../index.php'">홈으로 돌아가기</button>
+        </section>
+    </div>
 </body>
 </html>

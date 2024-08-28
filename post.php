@@ -140,8 +140,11 @@ $board = $stmt->fetch();
                     return true;
                 }
             </script>
-            
+            <?php if (isset($_SESSION['user_id']) || $_SESSION['role'] == 'admin'): ?>
+            <button class="list-btn" onclick="location.href='admin/posts.php'">글 관리</button>
+            <?php else: ?>
             <button class="list-btn" onclick="location.href='board.php?id=<?= $board['id']; ?>'">목록</button>
+            <?php endif; ?>
         </section>
     </div>
 </body>

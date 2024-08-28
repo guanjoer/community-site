@@ -20,6 +20,7 @@ button[type="submit"] {
     cursor: pointer;
     border-radius: 4px;
 	color: rgb(56, 56, 56);
+	text-decoration: none;
 }
 
 #back-btn:hover {

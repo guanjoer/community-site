@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt = $pdo->prepare("INSERT INTO boards (name, description) VALUES (?, ?)");
         $stmt->execute([$name, $description]);
 
-        echo "<script>alert('게시판이 성공적으로 생성되었습니다.'); window.location.href='dashboard.php';</script>";
+        echo "<script>alert('게시판이 성공적으로 생성되었습니다.'); window.location.href='boards.php';</script>";
     }
 }
 ?>
@@ -34,8 +34,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <title>게시판 생성</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=New+Amsterdam&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="../styles/base.css"> 
+    <link rel="stylesheet" href="styles/write_board.css">
 </head>
 <body>
+    <?php require_once 'admin_header.php' ?>
+
+    <div id="create-post-content">
+
     <h1>게시판 생성</h1>
 
     <form method="post" action="create_board.php">
@@ -48,6 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <button type="submit">생성하기</button>
     </form>
 
-    <button onclick="location.href='dashboard.php'">관리자 대시보드로 돌아가기</button>
+    <button class="back-btn" onclick="location.href='boards.php'">이전</button>
+    </div>
 </body>
 </html>

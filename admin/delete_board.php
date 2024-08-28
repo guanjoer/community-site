@@ -27,12 +27,12 @@ if (isset($_GET['id'])) {
         // $stmt = $pdo->prepare("DELETE FROM posts WHERE board_id = ?");
         // $stmt->execute([$board_id]);
 
-        echo "<script>alert('게시판이 성공적으로 삭제되었습니다.'); window.location.href='dashboard.php';</script>";
+        echo "<script>alert('게시판이 성공적으로 삭제되었습니다.'); window.location.href='boards.php';</script>";
     } else {
-        echo "<script>alert('존재하지 않는 게시판입니다.'); window.location.href='dashboard.php';</script>";
+        echo "<script>alert('존재하지 않는 게시판입니다.'); history.back();</script>";
     }
 } else {
-    header("Location: dashboard.php");
+    header("Location: boards.php");
     exit();
 }
 ?>

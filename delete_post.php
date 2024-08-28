@@ -47,7 +47,15 @@ if (isset($_GET['id'])) {
     $stmt = $pdo->prepare("DELETE FROM posts WHERE id = ?");
     $stmt->execute([$post_id]);
 
-    echo "<script>alert('게시글이 성공적으로 삭제되었습니다.'); window.location.href='index.php';</script>";
+    echo "<script>alert('게시글이 성공적으로 삭제되었습니다.')";
+
+    if (isset($_SESSION['user_id']) || $_SESSION['role'] == 'admin') {
+        header("Location: admin/posts.php");
+        exit();
+    } else {
+        header("Location: index.php");
+        exit();
+    }
     exit();
 } else {
     header("Location: index.php");

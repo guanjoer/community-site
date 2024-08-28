@@ -127,8 +127,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <button type="submit">UPDATE</button>
         </form>
+        <a id="back-btn" href="post.php?id=<?php echo $post_id; ?>">BACK</a>
     </div>
-
-    <button id="back-btn" onclick="location.href='post.php?id=<?php echo $post_id; ?>'">BACK TO THE POST</button>
 </body>
 </html>
