@@ -6,6 +6,7 @@ require_once 'queries.php';
 
 // 검색어 가져오기
 $query = isset($_GET['q']) ? $_GET['q'] : '';
+$query = htmlspecialchars($query);
 
 if (empty($query)) {
     echo "<script>alert('검색어를 입력하세요.'); history.back();</script>";

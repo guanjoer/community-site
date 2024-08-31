@@ -88,7 +88,7 @@ if (isset($_GET['id'])) {
                         <tr>
                             <td><?php echo $counter; ?></td>
                             <td>
-                                <a href="post.php?id=<?php echo $post['id']; ?>">
+                                <a href="post.php?id=<?php echo htmlspecialchars($post['id']); ?>">
                                         <?php echo htmlspecialchars($post['title']); ?>
                                 </a>
                             </td>
@@ -110,7 +110,7 @@ if (isset($_GET['id'])) {
                                 <tr>
                                     <td><?php echo $counter ?></td>
                                     <td>
-                                        <a href="post.php?id=<?php echo $post['id']; ?>">
+                                        <a href="post.php?id=<?php echo htmlspecialchars($post['id']); ?>">
                                             <?php echo htmlspecialchars($post['title']); ?>
                                         </a>
                                     </td>

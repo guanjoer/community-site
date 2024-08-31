@@ -6,7 +6,7 @@ require_once 'config/db.php';
 require_once 'queries.php';
 
 // 게시글 정보 가져오기
-$post_id = $_GET['id'];
+$post_id = htmlspecialchars($_GET['id']);
 $stmt = $pdo->prepare("SELECT * FROM posts WHERE id = ?");
 $stmt->execute([$post_id]);
 $post = $stmt->fetch();
@@ -32,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['comment_content'])) {
         exit();
     }
 
-    $comment_content = $_POST['comment_content'];
+    $comment_content = htmlspecialchars($_POST['comment_content']);
     $user_id = $_SESSION['user_id'];
 
     $stmt = $pdo->prepare("INSERT INTO comments (post_id, user_id, content) VALUES (?, ?, ?)");
