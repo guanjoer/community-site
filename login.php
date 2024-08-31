@@ -21,12 +21,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['role'] = $user['role'];
         
         // 로그인 성공 시 리다이렉트
-        // header("Location: index.php");
         $redirect_url = isset($_POST['redirect_url']) ? $_POST['redirect_url'] : 'index.php';
         // var_dump($redirect_url);
         if (strpos($redirect_url, '/signup') !== false || strpos($redirect_url, '/signup_success.php')) {
             $redirect_url = 'index.php';
-            // header("Location: index.php");
         }
 
         header("Location: " . $redirect_url);

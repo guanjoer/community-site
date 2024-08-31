@@ -1,5 +1,5 @@
 <?php
-// DB 연결 설정
+// DB 연결 설정 // httpd.conf
 $host = getenv('DB_HOST');
 $db = getenv('DB_NAME');
 $user = getenv('DB_USER');

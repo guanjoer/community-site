@@ -80,15 +80,13 @@ $board = $stmt->fetch();
         <section id="content">
             <p class="board-name"><a href="board.php?id=<?php echo $board['id']; ?>"><?= $board['name']; ?> ></a></p>
             <h1><?php echo htmlspecialchars($post['title']); ?></h1>
-            <?php if (isset($_SESSION['user_id'])): ?>
-                <div class="post-profile-info">
+            <div class="post-profile-info">
 				<img id="post-profile" src="uploads/<?php echo !empty($post_user['profile_image']) ? htmlspecialchars($post_user['profile_image']) : 'default.png'; ?>" alt="프로필 이미지">
-            <?php endif; ?>
-                    <div class="post-profile-info-2">
+                <div class="post-profile-info-2">
                     <p><?php echo $post_user['username'] ?></p>
                     <span><?php echo date('Y-m-d H:i', strtotime($post_user['created_at'])); ?></span>
-                    </div>
                 </div>
+            </div>
                 <p class="post-content"><?php echo htmlspecialchars($post['content']); ?></p>
 
             <?php if (!empty($files)): ?>
@@ -123,12 +121,12 @@ $board = $stmt->fetch();
                     </li>
                 <?php endforeach; ?>
             </ul>
-                    
-                    <!-- <h2>댓글 작성</h2> -->
-                    <form method="post" action="post.php?id=<?php echo $post_id; ?>" onsubmit="return checkLoginAndSubmit();">
-                        <textarea name="comment_content" rows="3" required></textarea><br>
-                        <button class="post-btn post-btn2" type="submit">댓글 작성</button>
-                    </form>
+            
+            <!-- <h2>댓글 작성</h2> -->
+            <form method="post" action="post.php?id=<?php echo $post_id; ?>" onsubmit="return checkLoginAndSubmit();">
+                <textarea name="comment_content" rows="3" required></textarea><br>
+                <button class="post-btn post-btn2" type="submit">댓글 작성</button>
+            </form>
 
             <script>
                 function checkLoginAndSubmit() {
@@ -140,10 +138,12 @@ $board = $stmt->fetch();
                     return true;
                 }
             </script>
-            <?php if (isset($_SESSION['user_id']) || $_SESSION['role'] == 'admin'): ?>
-            <button class="list-btn" onclick="location.href='admin/posts.php'">글 관리</button>
+            <?php if(isset($_SESSION['user_id']) and isset($_SESSION['role'])): ?>
+                <?php if ($_SESSION['role'] == 'admin'): ?>
+                <button class="list-btn" onclick="location.href='admin/posts.php'">글 관리</button>
+                <?php endif; ?>
             <?php else: ?>
-            <button class="list-btn" onclick="location.href='board.php?id=<?= $board['id']; ?>'">목록</button>
+                <button class="list-btn" onclick="location.href='board.php?id=<?= $board['id']; ?>'">목록</button>
             <?php endif; ?>
         </section>
     </div>
