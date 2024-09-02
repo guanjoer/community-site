@@ -5,7 +5,7 @@ require_once 'config/db.php';
 
 // 게시글 정보 가져오기
 if (isset($_GET['id'])) {
-    $post_id = $_GET['id'];
+    $post_id = htmlspecialchars($_GET['id']);
     $stmt = $pdo->prepare("SELECT * FROM posts WHERE id = ?");
     $stmt->execute([$post_id]);
     $post = $stmt->fetch();
