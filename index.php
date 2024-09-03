@@ -5,11 +5,29 @@ require_once 'config/db.php';
 
 require_once 'queries.php';
 
-// 전체 글 목록 가져오기 // 최근 글 15개
-$stmt = $pdo->query("SELECT posts.id, posts.title, posts.created_at, users.username, posts.board_id FROM posts JOIN users ON posts.user_id = users.id ORDER BY posts.created_at DESC LIMIT 15");
+// 현재 페이지 번호
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+
+// 한 페이지에 표시할 게시글 수
+$posts_per_page = 5;
+
+// offset + 1의 레코드 부터 데이터를 가져옴 // 즉 offest = 15이면 16번째 레코드 부터 데이터를 가져옴
+$offset = ($page - 1) * $posts_per_page;
+
+// 전체 글의 수
+$total_posts_stmt = $pdo->query("SELECT COUNT(*) FROM posts");
+$total_posts = $total_posts_stmt->fetchColumn();
+
+// 전체 페이지 수 // 32개의 글이 존재하고 페이지 당 10개의 글을 표시한다면 3.2의 올림인 4 페이지가 전체 페이지 수
+$total_pages = ceil($total_posts / $posts_per_page);
+
+// 현재 페이지에 해당하는 글
+$stmt = $pdo->query("SELECT posts.id, posts.title, posts.created_at, users.username, posts.board_id 
+                     FROM posts 
+                     JOIN users ON posts.user_id = users.id 
+                     ORDER BY posts.created_at DESC 
+                     LIMIT $posts_per_page OFFSET $offset");
 $posts = $stmt->fetchAll();
-
-
 ?>
 
 <!DOCTYPE html>
@@ -71,8 +89,25 @@ $posts = $stmt->fetchAll();
                     ?>
                 </tbody>
             </table>
-        </section>
 
+            <!-- 페이지 네비게이션 -->
+            <div id="pagination">
+                <?php if ($page > 1): ?>
+                    <span>< </span><a href="?page=<?php echo $page - 1; ?>">이전</a>
+                <?php endif; ?>
+
+                <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+                    <a href="?page=<?php echo $i; ?>"<?php if ($i === $page) echo ' class="active"'; ?>>
+                        <?php echo $i; ?>
+                    </a>
+                <?php endfor; ?>
+
+                <?php if ($page < $total_pages): ?>
+                    <a href="?page=<?php echo $page + 1; ?>">다음</a><span> ></span>
+                <?php endif; ?>
+            </div>
+
+        </section>
     </div>
 </body>
 </html>

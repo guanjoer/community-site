@@ -211,3 +211,31 @@ ul li span {
 #search-bar button:hover {
 	background: #444444;
 }
+
+#pagination {
+	background-color: #ececec;
+	padding: 1rem 0.5rem;
+    margin-top: 2rem;
+    width: 100%;
+	text-align: center;
+}
+
+#pagination a {
+	text-decoration: none;
+	margin: 0 0.5rem;
+	color: #656565;
+	font: inherit;
+}
+
+#pagination a:hover {
+	text-decoration: underline;
+}
+
+#pagination span {
+	font-size: 1.3rem;
+	color: #656565;
+}
+
+#pagination .active {
+    color: #c78ec7;
+}
