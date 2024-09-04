@@ -5,9 +5,22 @@ require_once 'config/db.php';
 
 require_once 'queries.php';
 
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$posts_per_page = 5;
+$offset = ($page - 1) * $posts_per_page;
+
+
 // 게시판 정보 가져오기
 if (isset($_GET['id'])) {
     $board_id = $_GET['id'];
+
+    $total_posts_stmt = $pdo->prepare("SELECT COUNT(*) FROM posts WHERE board_id = ?");
+    $total_posts_stmt->execute([$board_id]);
+    $total_posts = $total_posts_stmt->fetchColumn();
+    
+    // 각 게시판에 해당하는 총 페이지 수
+    $total_pages = ceil($total_posts / $posts_per_page);
+
     $stmt = $pdo->prepare("SELECT * FROM boards WHERE id = ?");
     $stmt->execute([$board_id]);
     $board = $stmt->fetch();
@@ -22,14 +35,21 @@ if (isset($_GET['id'])) {
                            FROM posts 
                            JOIN users ON posts.user_id = users.id 
                            WHERE posts.board_id = ? 
-                           ORDER BY posts.created_at DESC");
+                           ORDER BY posts.created_at DESC
+                           LIMIT $posts_per_page OFFSET $offset");
     $stmt->execute([$board_id]);
     $posts = $stmt->fetchAll();
 } else {
+    $total_posts_stmt = $pdo->query("SELECT COUNT(*) FROM posts");
+    $total_posts = $total_posts_stmt->fetchColumn();
+    
+    $total_pages = ceil($total_posts / $posts_per_page);
+
     $stmt = $pdo->prepare("SELECT posts.id, posts.title, posts.created_at, users.username 
                            FROM posts 
                            JOIN users ON posts.user_id = users.id 
-                           ORDER BY posts.created_at DESC");
+                           ORDER BY posts.created_at DESC
+                           LIMIT $posts_per_page OFFSET $offset");
     $stmt->execute();
     $all_posts = $stmt->fetchAll();
 }
@@ -83,7 +103,7 @@ if (isset($_GET['id'])) {
                 </thead>
                 <tbody>
                     <?php if (isset($_GET['id']) && $posts): ?>
-                    <?php $counter = count($posts); ?>
+                    <?php $counter = $total_posts - ($page - 1) * $posts_per_page; ?>
                     <?php foreach ($posts as $post): ?>
                         <tr>
                             <td><?php echo $counter; ?></td>
@@ -105,7 +125,7 @@ if (isset($_GET['id'])) {
 
                     <tbody>
                         <?php elseif (!isset($_GET['id']) && $all_posts): ?>
-                            <?php $counter = count($all_posts); ?>
+                            <?php $counter = $total_posts - ($page - 1) * $posts_per_page; ?>
                             <?php foreach ($all_posts as $post): ?>
                                 <tr>
                                     <td><?php echo $counter ?></td>
@@ -128,6 +148,24 @@ if (isset($_GET['id'])) {
                     <p>게시글이 없습니다.</p>
                 <?php endif; ?>
                 </table>
+
+                <div id="pagination">
+                    <?php if ($page > 1): ?>
+                        <span>< </span>
+                        <a href="?page=<?php echo $page - 1; ?><?php echo isset($board_id) ? '&id=' . $board_id : ''; ?>">이전</a>
+                    <?php endif; ?>
+
+                    <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+                        <a href="?page=<?php echo $i; ?><?php echo isset($board_id) ? '&id=' . $board_id : ''; ?>"<?php if ($i === $page) echo ' class="active"'; ?>>
+                            <?php echo $i; ?>
+                        </a>
+                    <?php endfor; ?>
+
+                    <?php if ($page < $total_pages): ?>
+                        <a href="?page=<?php echo $page + 1; ?><?php echo isset($board_id) ? '&id=' . $board_id : ''; ?>">다음</a><span> ></span>
+                    <?php endif; ?>
+                </div>
+
             </section>
         </div>
 </body>

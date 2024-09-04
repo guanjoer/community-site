@@ -238,4 +238,5 @@ ul li span {
 
 #pagination .active {
     color: #c78ec7;
+	font-weight: bold;
 }
