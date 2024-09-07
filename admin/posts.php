@@ -11,12 +11,24 @@ require_once '../config/db.php';
 
 require_once '../queries.php';
 
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$posts_per_page = 5;
+$offset = ($page - 1) * $posts_per_page;
+
+$total_posts_stmt = $pdo->query("SELECT COUNT(*) FROM posts");
+$total_posts = $total_posts_stmt->fetchColumn();
+
+$total_pages = ceil($total_posts / $posts_per_page);
+
 // 게시판
 $stmt = $pdo->query("SELECT * FROM boards ORDER BY created_at DESC");
 $boards = $stmt->fetchAll();
 
 // 게시글
-$stmt = $pdo->query("SELECT posts.id, posts.title, posts.created_at, users.username, posts.board_id FROM posts JOIN users ON posts.user_id = users.id ORDER BY posts.created_at DESC LIMIT 10");
+$stmt = $pdo->query("SELECT posts.id, posts.title, posts.created_at, users.username, posts.board_id 
+					 FROM posts JOIN users ON posts.user_id = users.id
+					 ORDER BY posts.created_at DESC
+					 LIMIT $posts_per_page OFFSET $offset");
 $posts = $stmt->fetchAll();
 ?>
 
@@ -78,6 +90,23 @@ $posts = $stmt->fetchAll();
 			?>
 		</tbody>
 	</table>
+
+	<!-- 페이지 네비게이션 -->
+	<div id="pagination">
+                <?php if ($page > 1): ?>
+                    <span>< </span><a href="?page=<?php echo $page - 1; ?>">이전</a>
+                <?php endif; ?>
+
+                <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+                    <a href="?page=<?php echo $i; ?>"<?php if ($i === $page) echo ' class="active"'; ?>>
+                        <?php echo $i; ?>
+                    </a>
+                <?php endfor; ?>
+
+                <?php if ($page < $total_pages): ?>
+                    <a href="?page=<?php echo $page + 1; ?>">다음</a><span> ></span>
+                <?php endif; ?>
+            </div>
 	</section>
 	</div>
 </body>
