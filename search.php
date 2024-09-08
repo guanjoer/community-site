@@ -13,10 +13,9 @@ if (empty($query)) {
     exit();
 }
 
-if (strtolower($query) == "post") {
-    echo "<script>alert('post는 충돌이 발생하여 금지된 단어입니다. 다른 단어로 시도해주세요.'); history.back();</script>";
-    // $query = `post`;
-}
+// if (strtolower($query) == "post") {
+//     echo "<script>alert('post는 충돌이 발생하여 금지된 단어입니다. 다른 단어로 시도해주세요.'); history.back();</script>";
+// }
 
 $search_query = "%" . strtolower($query) . "%";
 
@@ -35,9 +34,9 @@ $posts = $stmt->fetchAll();
 $board_ids = array_unique(array_column($posts, 'board_id')); // board_id 필드의 값들만 새로운 배열로 생성 및 중복 제거
 $boards = [];  // 빈 배열로 초기화
 if (!empty($board_ids)) {
-    $in  = str_repeat('?,', count($board_ids) - 1) . '?'; // board_id의 개수만큼 ? 자리표시자 생성
+    $in  = str_repeat('?,', count($board_ids) -1 ) . '?'; // board_id의 개수만큼 ? 자리표시자 생성
     $stmt = $pdo->prepare("SELECT id, name FROM boards WHERE id IN ($in)");
-    $stmt->execute($board_ids);
+    $stmt->execute([...$board_ids]);
     $boards = $stmt->fetchAll();
 }
 ?>
@@ -46,7 +45,7 @@ if (!empty($board_ids)) {
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>검색 결과</title>
+    <title>Search Results</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

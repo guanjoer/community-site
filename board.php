@@ -67,7 +67,7 @@ if (isset($_GET['id'])) {
     <link rel="stylesheet" href="styles/main.css">
 
     <?php if(isset($_GET['id'])): ?>
-        <title><?php echo htmlspecialchars($board['name']); ?> - 게시판</title>
+        <title><?php echo htmlspecialchars($board['name']); ?></title>
     <?php else: ?>
         <title>전체글</title>
     <?php endif; ?>
@@ -91,7 +91,8 @@ if (isset($_GET['id'])) {
             <?php else: ?>
                 <h2>전체글</h2>
             <?php endif; ?>
-            
+
+            <?php if (isset($_GET['id']) && $posts): ?>
             <table>
                 <thead>
                     <tr>
@@ -102,7 +103,6 @@ if (isset($_GET['id'])) {
                     </tr>
                 </thead>
                 <tbody>
-                    <?php if (isset($_GET['id']) && $posts): ?>
                     <?php $counter = $total_posts - ($page - 1) * $posts_per_page; ?>
                     <?php foreach ($posts as $post): ?>
                         <tr>
@@ -122,9 +122,19 @@ if (isset($_GET['id'])) {
                         <?php $counter--; ?>
                     <?php endforeach; ?>
                     </tbody>
+                    </table>
 
+                    <?php elseif (!isset($_GET['id']) && $all_posts): ?>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>번호</th>
+                                <th>제목</th>
+                                <th>글쓴이</th>
+                                <th>작성일</th>
+                            </tr>
+                        </thead>
                     <tbody>
-                        <?php elseif (!isset($_GET['id']) && $all_posts): ?>
                             <?php $counter = $total_posts - ($page - 1) * $posts_per_page; ?>
                             <?php foreach ($all_posts as $post): ?>
                                 <tr>
@@ -144,11 +154,12 @@ if (isset($_GET['id'])) {
                                 <?php $counter--; ?>
                             <?php endforeach; ?>
                     </tbody>
+                            </table>
                 <?php else: ?>
                     <p>게시글이 없습니다.</p>
                 <?php endif; ?>
-                </table>
-
+                
+                <?php if((!isset($_GET['id']) && $all_posts) || isset($_GET['id']) && ($posts)): ?>
                 <div id="pagination">
                     <?php if ($page > 1): ?>
                         <span>< </span>
@@ -164,8 +175,10 @@ if (isset($_GET['id'])) {
                     <?php if ($page < $total_pages): ?>
                         <a href="?page=<?php echo $page + 1; ?><?php echo isset($board_id) ? '&id=' . $board_id : ''; ?>">다음</a><span> ></span>
                     <?php endif; ?>
-                </div>
-
+                    </div>
+                <?php else: ?>
+                
+            <?php endif; ?>
             </section>
         </div>
 </body>

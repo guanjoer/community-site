@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $redirect_url = 'index.php';
         }
 
-        if (strpos($redirect_url, 'http://192.168.0.10') === false && strpos($redirect_url, 'http://localhost') === false) {
+        if (strpos($redirect_url, '192.168.0.10') === false && strpos($redirect_url, 'localhost') === false) {
             echo "<script>alert('올바르지 않은 접근입니다.'); history.back();</script>";
             exit();
         }

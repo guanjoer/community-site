@@ -41,6 +41,7 @@ $posts = $stmt->fetchAll();
 
     <link rel="stylesheet" href="styles/base.css"> 
     <link rel="stylesheet" href="styles/main.css"> 
+    <link rel="icon" href="favicon/favicon.ico" type="image/x-icon">
 </head>
 <body>
     <?php require_once 'header.php' ?>
@@ -59,6 +60,7 @@ $posts = $stmt->fetchAll();
         <!-- 메인 콘텐츠: 전체 글 목록 -->
         <section id="content">
             <h2 class="header-2"><a href="board.php">전체글 보기</a></h2>
+            <?php if($posts): ?>
             <table>
                 <thead>
                     <tr>
@@ -90,7 +92,11 @@ $posts = $stmt->fetchAll();
                     ?>
                 </tbody>
             </table>
-
+            <?php else: ?>
+                <p>게시글이 없습니다.</p>
+            <?php endif; ?>
+            
+            <?php if($posts): ?>
             <!-- 페이지 네비게이션 -->
             <div id="pagination">
                 <?php if ($page > 1): ?>
@@ -107,7 +113,7 @@ $posts = $stmt->fetchAll();
                     <a href="?page=<?php echo $page + 1; ?>">다음</a><span> ></span>
                 <?php endif; ?>
             </div>
-
+            <?php endif; ?>
         </section>
     </div>
 </body>

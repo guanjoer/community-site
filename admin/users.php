@@ -90,7 +90,8 @@ $users = $stmt->fetchAll();
 	</div>
 	</tbody>
 	</table>
-
+		
+		<?php if($users): ?>
 		<div id="pagination">
 			<?php if ($page > 1): ?>
 				<span>< </span><a href="?page=<?php echo $page - 1; ?>">이전</a>
@@ -106,5 +107,6 @@ $users = $stmt->fetchAll();
 				<a href="?page=<?php echo $page + 1; ?>">다음</a><span> ></span>
 			<?php endif; ?>
 		</div>
+		<?php endif; ?>
 </body>
 </html>
