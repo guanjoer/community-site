@@ -71,7 +71,7 @@ $posts = $stmt->fetchAll();
 		</thead>
 		<tbody>
 			<?php 
-			$counter = count($posts); 
+			$counter = $total_posts - ($page - 1) * $posts_per_page;
 			foreach ($posts as $post): 
 			?>
 				<tr>

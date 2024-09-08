@@ -11,8 +11,18 @@ require_once '../config/db.php';
 
 require_once '../queries.php';
 
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$boards_per_page = 5;
+$offset = ($page - 1) * $boards_per_page;
+
+$total_boards_stmt = $pdo->query("SELECT COUNT(*) FROM boards");
+$total_boards = $total_boards_stmt->fetchColumn();
+
+$total_pages = ceil($total_boards / $boards_per_page);
+
 // 게시판 목록 가져오기
-$stmt = $pdo->query("SELECT * FROM boards ORDER BY created_at DESC");
+$stmt = $pdo->query("SELECT * FROM boards ORDER BY created_at DESC
+					 LIMIT $boards_per_page OFFSET $offset");
 $boards = $stmt->fetchAll();
 ?>
 
@@ -72,5 +82,21 @@ $boards = $stmt->fetchAll();
 	</div>
 	</tbody>
 	</table>
+
+	<div id="pagination">
+		<?php if ($page > 1): ?>
+			<span>< </span><a href="?page=<?php echo $page - 1; ?>">이전</a>
+		<?php endif; ?>
+
+		<?php for ($i = 1; $i <= $total_pages; $i++): ?>
+			<a href="?page=<?php echo $i; ?>"<?php if ($i === $page) echo ' class="active"'; ?>>
+				<?php echo $i; ?>
+			</a>
+		<?php endfor; ?>
+
+		<?php if ($page < $total_pages): ?>
+			<a href="?page=<?php echo $page + 1; ?>">다음</a><span> ></span>
+		<?php endif; ?>
+	</div>
 </body>
 </html>

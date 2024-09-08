@@ -12,8 +12,18 @@ require_once '../config/db.php';
 require_once '../queries.php';
 
 
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$users_per_page = 5;
+$offset = ($page - 1) * $users_per_page;
+
+$total_users_stmt = $pdo->query("SELECT COUNT(*) FROM users");
+$total_users = $total_users_stmt->fetchColumn();
+
+$total_pages = ceil($total_users / $users_per_page);
+
 // 사용자
-$stmt = $pdo->query("SELECT * FROM users ORDER BY created_at");
+$stmt = $pdo->query("SELECT * FROM users ORDER BY created_at
+					 LIMIT $users_per_page OFFSET $offset");
 $users = $stmt->fetchAll();
 ?>
 
@@ -75,9 +85,26 @@ $users = $stmt->fetchAll();
 				</td>
 			</tr>
 			<?php endforeach; ?>
+				
         </section>
 	</div>
 	</tbody>
 	</table>
+
+		<div id="pagination">
+			<?php if ($page > 1): ?>
+				<span>< </span><a href="?page=<?php echo $page - 1; ?>">이전</a>
+			<?php endif; ?>
+
+			<?php for ($i = 1; $i <= $total_pages; $i++): ?>
+				<a href="?page=<?php echo $i; ?>"<?php if ($i === $page) echo ' class="active"'; ?>>
+					<?php echo $i; ?>
+				</a>
+			<?php endfor; ?>
+
+			<?php if ($page < $total_pages): ?>
+				<a href="?page=<?php echo $page + 1; ?>">다음</a><span> ></span>
+			<?php endif; ?>
+		</div>
 </body>
 </html>
