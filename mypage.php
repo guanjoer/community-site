@@ -93,6 +93,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <link rel="stylesheet" href="styles/base.css"> 
     <link rel="stylesheet" href="styles/mypage.css">
+    <link rel="icon" href="favicon/favicon.ico" type="image/x-icon">
     <script>
         function previewImage(event) {
             const reader = new FileReader();

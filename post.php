@@ -70,6 +70,7 @@ $board = $stmt->fetch();
 
     <link rel="stylesheet" href="styles/base.css"> 
     <link rel="stylesheet" href="styles/post.css">
+    <link rel="icon" href="favicon/favicon.ico" type="image/x-icon">
 </head>
 <body>
     <?php require_once 'header.php' ?>
@@ -112,7 +113,7 @@ $board = $stmt->fetch();
                 <?php foreach ($comments as $comment): ?>
                 <li>
                     <p><?php echo htmlspecialchars($comment['content']); ?></p>
-                    <span class="comment-display">작성자: <strong><?php echo htmlspecialchars($comment['username']); ?></strong> | 작성일: <strong><?php echo date('Y-m-d H:i', strtotime($post_user['created_at'])); ?></strong></span>
+                    <span class="comment-display">작성자: <strong><?php echo htmlspecialchars($comment['username']); ?></strong> | 작성일: <strong><?php echo date('Y-m-d H:i', strtotime($comment['created_at'])); ?></strong></span>
                     <?php if (isset($_SESSION['user_id']) && isset($_SESSION['role']) && ($comment['user_id'] == $_SESSION['user_id'] || $_SESSION['role'] === 'admin')): ?>
                         <div id="comment-delete-btn">
                         <a href="delete_comment.php?id=<?php echo $comment['id']; ?>&post_id=<?php echo $post_id; ?>" onclick="return confirm('이 댓글을 삭제하시겠습니까?')">삭제</a>

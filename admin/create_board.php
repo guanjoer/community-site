@@ -41,6 +41,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <link rel="stylesheet" href="../styles/base.css"> 
     <link rel="stylesheet" href="styles/write_board.css">
+
+    <link rel="icon" href="../favicon/favicon.ico" type="image/x-icon">
 </head>
 <body>
     <?php require_once 'admin_header.php' ?>

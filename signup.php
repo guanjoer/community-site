@@ -79,6 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" href="styles/base.css"> 
     <link rel="stylesheet" href="styles/sign.css">
     <link rel="stylesheet" href="styles/signup.css">
+    <link rel="icon" href="favicon/favicon.ico" type="image/x-icon">
     <script>
         function checkUsername() {
             const username = document.getElementById('username').value;

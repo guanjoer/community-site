@@ -53,6 +53,7 @@ if (!empty($board_ids)) {
 
     <link rel="stylesheet" href="styles/base.css">
     <link rel="stylesheet" href="styles/main.css">
+    <link rel="icon" href="favicon/favicon.ico" type="image/x-icon">
 </head>
 <body>
     <?php require_once 'header.php' ?>

@@ -65,7 +65,7 @@ if (isset($_GET['id'])) {
 
     <link rel="stylesheet" href="styles/base.css"> 
     <link rel="stylesheet" href="styles/main.css">
-
+    <link rel="icon" href="favicon/favicon.ico" type="image/x-icon">
     <?php if(isset($_GET['id'])): ?>
         <title><?php echo htmlspecialchars($board['name']); ?></title>
     <?php else: ?>

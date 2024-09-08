@@ -101,6 +101,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" href="styles/base.css">
     <link rel="stylesheet" href="styles/write.css">
     <link rel="stylesheet" href="styles/edit_post.css">
+    <link rel="icon" href="favicon/favicon.ico" type="image/x-icon">
 </head>
 <body>
     <?php require_once 'header.php' ?>

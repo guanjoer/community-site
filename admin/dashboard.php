@@ -37,6 +37,8 @@ $post_count = $stmt->fetchColumn();
 
     <link rel="stylesheet" href="../styles/base.css">
     <link rel="stylesheet" href="styles/dashboard.css">
+
+    <link rel="icon" href="../favicon/favicon.ico" type="image/x-icon">
 </head>
 <body>
     <?php require_once 'admin_header.php' ?>
