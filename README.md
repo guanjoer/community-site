@@ -48,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 ```
-실행 되지 않도록 하여
+
 - 파일 업로드 시, 파일 이름 **난수화**, **화이트리스트 기반**의 파일 **확장자**, **MIME type**의 검증 및 **.htaccess** 설정을 통해 **php** 파일이 **실행** 되지 않도록 하여 **파일 업로드 취약점**에 대한 대응 로직 구현
 
 ```php
@@ -77,6 +77,13 @@ $upload_success = true;
             echo "<script>alert('허용되지 않은 파일 형식입니다.'); history.back();</script>";
         }
     }
+```
+
+```bash
+# .htaccess
+<FilesMatch "\.(php|phtml|php3|php4|php5)$">
+    Deny from all
+</FilesMatch>
 ```
 <!-- - **ROLE** 기반 접근 제어
 
