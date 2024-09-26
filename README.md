@@ -48,7 +48,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 ```
+실행 되지 않도록 하여
+- 파일 업로드 시, 파일 이름 **난수화**, **화이트리스트 기반**의 파일 **확장자**, **MIME type**의 검증 및 **.htaccess** 설정을 통해 **php** 파일이 **실행** 되지 않도록 하여 **파일 업로드 취약점**에 대한 대응 로직 구현
 
+```php
+$upload_success = true;
+    if (isset($_FILES['uploaded_file']) && $_FILES['uploaded_file']['error'] == 0) {
+        // 화이트리스트 기반 파일 확장자, MIME type 검증
+        $allowed_extensions = ['png', 'jpg', 'pdf', 'xlsx'];
+        $allowed_mime_types = ['image/png', 'image/jpeg', 'application/pdf', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
+
+        // 파일 정보 추출
+        $file_extension = pathinfo($_FILES['uploaded_file']['name'], PATHINFO_EXTENSION);
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        $mime_type = finfo_file($finfo, $_FILES['uploaded_file']['tmp_name']);
+
+        if (in_array($file_extension, $allowed_extensions) && in_array($mime_type, $allowed_mime_types)) {
+            $upload_dir = 'uploads/';
+            $file_name =  uniqid() . '.' . $file_extension; // 파일 이름 난수화
+            $file_path = $upload_dir . $file_name;
+
+            if (!move_uploaded_file($_FILES['uploaded_file']['tmp_name'], $file_path)) {
+                $upload_success = false;
+                echo "<script>alert('파일 업로드 중 오류가 발생했습니다.'); history.back();</script>";
+            }
+        } else {
+            $upload_success = false;
+            echo "<script>alert('허용되지 않은 파일 형식입니다.'); history.back();</script>";
+        }
+    }
+```
 <!-- - **ROLE** 기반 접근 제어
 
 	- 관리자 ROLE인 사용자의 경우에만 **관리자 페이지에 접근** 가능

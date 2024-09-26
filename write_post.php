@@ -51,11 +51,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             if (!move_uploaded_file($_FILES['uploaded_file']['tmp_name'], $file_path)) {
                 $upload_success = false;
-                echo "<script>alert('파일 업로드 중 오류가 발생했습니다.');</script>";
+                echo "<script>alert('파일 업로드 중 오류가 발생했습니다.'); history.back();</script>";
             }
         } else {
             $upload_success = false;
-            echo "<script>alert('허용되지 않은 파일 형식입니다.'); history.back()</script>";
+            echo "<script>alert('허용되지 않은 파일 형식입니다.'); history.back();</script>";
         }
     }
 
