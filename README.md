@@ -2,26 +2,39 @@
 
 해당 프로젝트는 `PHP`, `MySQL`을 주요 기술 스택으로 사용하여 만든 **커뮤니티 웹 사이트**입니다.
 
-### 주요 기능
+---
+
+### **주요 기능**
 
 - 회원 가입 및 로그인(세션 기반 인증)
-- 게시글 CRUD(Create/Read/Update/Delete)
+- 게시글 **CRUD(Create/Read/Update/Delete)**
 - 파일 업로드 기능
 - 파일 다운로드 기능
 - 댓글 기능
 - 게시판 기능
 - 프로필 수정 기능(프로필 사진/비밀번호/아이디/이메일)
 - 게시글 검색 기능
+- 페이지네이션 기능(게시글/사용자/게시판 목록)
 - 관리자 대시보드 기능(사용자/게시판/게시글 관리)
 
+---
 
-### 공격에 대한 대응 로직
+### **공격에 대한 대응 로직**
 
-#### XSS
+#### **XSS**
 
 - `htmlspecialchars` 함수를 사용하여 사용자 입력값의 입력과 출력을 이스케이프 처리하여 **XSS** 공격에 대한 대응 로직 구현
+- `httpOnly` 플래그 설정을 통해 Javascript를 통해 세션 ID가 저장된 쿠키 값에 접근하지 못하도록 하여 **Cookie Replay Attack**에 대한 대응 로직 구현
 
-#### SQL Injection
+```php
+<?php
+session_set_cookie_params([
+    'httponly' => true, 
+]);
+?>
+```
+
+#### **SQL Injection**
 
 - **Prepared Statements**를 사용하여 SQL 쿼리와 사용자 입력 값을 분리하여 **SQL Injection** 공격에 대한 대응 로직 구현
 
@@ -30,13 +43,15 @@ $stmt = $pdo->prepare("INSERT INTO posts (user_id, board_id, title, content) VAL
         $stmt->execute([$user_id, $board_id, $title, $content]);
 ```
 
-#### CSRF Attack
+#### **CSRF Attack**
 
 - `CSRF Token`을 사용하여 **CSRF** 공격에 대한 대응 로직 구현
 
 ```php
 // CSRF Token 생성
-$_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+if (!isset($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
 
 // form 태그 내 CSRF Token 추가
 <?php echo '<input type="hidden" name="_csrf" value="' . $_SESSION['csrf_token'] . '">'; ?>
@@ -47,12 +62,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if($_SESSION['csrf_token'] != $_POST['_csrf']) {
         echo "<script>alert('잘못된 접근입니다.'); history.back();</script>";
     }
-	// 이후 로직...
+	// ...파일 업로드 검증 로직...
+    // 게시글 작성 성공 시 CSRF Token 갱신
+    echo "<script>alert('게시글이 성공적으로 작성되었습니다.'); window.location.href='index.php';</script>";
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
 ?>
 ```
 
-#### File Upload Vulnerability
+#### **File Upload Vulnerability**
 
 - 파일 업로드 시, 파일 이름 **난수화**, **화이트리스트 기반**의 파일 **확장자**, **MIME type**의 검증 및 **.htaccess** 설정을 통해 **php** 파일이 **실행** 되지 않도록 하여 **파일 업로드 취약점**에 대한 대응 로직 구현
 
@@ -90,11 +108,45 @@ $upload_success = true;
     Deny from all
 </FilesMatch>
 ```
-<!-- - **ROLE** 기반 접근 제어
 
-	- 관리자 ROLE인 사용자의 경우에만 **관리자 페이지에 접근** 가능
-	- 관리자인 경우에만 **물품의 추가, 수정, 삭제** 가능.
-	- 관리자인 경우에만 개인 정보가 포함된 **모든 사용자의 주문 정보 열람** 가능
-	- 관리자인 경우에만 **주문 정보 수정** 가능
-	- 비 로그인 시에도 장바구니의 물품 추가 및 저장이 가능하나, **로그인을 해야만 물품 구매 진행이 가능**하도록 구현
-	- 물품을 주문한 사용자 본인만이 자신의 물품 주문 정보 확인 가능 -->
+#### **Authentication & Access Contorl**
+
+- 사용자에게 **ROLE(user/admin)**을 부여하여 `ROLE === "admin"` 인 사용자만이 `/admin/` 경로에 해당하는 관리자 페이지에 접근이 가능하도록 로직 구현
+- 만약 로그인이 되어 있지 않거나, `ROLE != "admin"` 인 사용자가 `/admin/` 경로에 접근을 시도할 때는 `error.php`라는 커스텀 에러 페이지를 보여주도록 로직 구현
+
+```php
+<?php
+// 로그인 및 관리자 여부 확인
+if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
+    header("HTTP/1.0 404 Not Found");
+    include('../errors/404.php');
+    exit();
+}
+?>
+```
+
+- 게시글과 댓글에 대해 **작성자 본인**과 **관리자** 만이 **삭제**가 가능하도록 서버 측 로직 구현
+
+```php
+// 게시글 - 작성자 또는 관리자 여부 확인
+if ($post['user_id'] != $_SESSION['user_id'] && $_SESSION['role'] !== 'admin') {
+    echo "<script>alert('게시글을 삭제할 권한이 없습니다.'); history.back();</script>";
+    exit();
+}
+
+// 댓글 - 작성자 또는 관리자 여부 확인
+if ($comment['user_id'] != $_SESSION['user_id'] && $_SESSION['role'] !== 'admin') {
+    echo "<script>alert('댓글을 삭제할 권한이 없습니다.'); window.location.href='post.php?id=$post_id';</script>";
+    exit();
+}
+```
+
+- 글 **작성자 본인**과 **관리**자 만이 해당 글 **수정**이 가능하도록 서버 측 로직 구현
+
+```php
+// 게시글 수정
+if ($post['user_id'] != $_SESSION['user_id'] && $_SESSION['role'] !== 'admin') {
+    echo "<script>alert('게시글을 수정할 권한이 없습니다.'); history.back();</script>";
+    exit();
+}
+```

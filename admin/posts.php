@@ -1,11 +1,11 @@
 <?php
+session_set_cookie_params([
+    'httponly' => true, 
+    'samesite' => 'Lax'
+]);
 session_start();
 
-// 관리자 여부 확인
-if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
-    header("Location: login.php");
-    exit();
-}
+require_once './error_handling.php';
 
 require_once '../config/db.php';
 

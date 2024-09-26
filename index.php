@@ -1,4 +1,9 @@
 <?php
+session_set_cookie_params([
+    'httponly' => true, 
+    'samesite' => 'Lax' // Cross-site 요청에 대한 보호(Lax, Strict, None)
+]);
+
 session_start();
 
 require_once 'config/db.php';
@@ -9,7 +14,7 @@ require_once 'queries.php';
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 
 // 한 페이지에 표시할 게시글 수
-$posts_per_page = 5;
+$posts_per_page = 10;
 
 // offset + 1의 레코드 부터 데이터를 가져옴 // 즉 offest = 15이면 16번째 레코드 부터 데이터를 가져옴
 $offset = ($page - 1) * $posts_per_page;

@@ -1,8 +1,14 @@
 <?php
+session_set_cookie_params([
+    'httponly' => true, 
+    'samesite' => 'Lax' // Cross-site 요청에 대한 보호(Lax, Strict, None)
+]);
 session_start();
 
 // CSRF Token
-$_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+if (!isset($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
 
 require_once 'config/db.php';
 
@@ -23,7 +29,8 @@ $boards = $stmt->fetchAll();
 // 게시글 작성 처리
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if($_SESSION['csrf_token'] != $_POST['_csrf']) {
-        echo "<script>alert('잘못된 접근입니다.'); window.history.back();</script>";
+        echo "<script>alert('잘못된 접근입니다.'); history.back();</script>";
+        exit();
     }
 
     $user_id = htmlspecialchars($_SESSION['user_id']);
@@ -52,10 +59,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (!move_uploaded_file($_FILES['uploaded_file']['tmp_name'], $file_path)) {
                 $upload_success = false;
                 echo "<script>alert('파일 업로드 중 오류가 발생했습니다.'); history.back();</script>";
+                exit();
             }
         } else {
             $upload_success = false;
             echo "<script>alert('허용되지 않은 파일 형식입니다.'); history.back();</script>";
+            exit();
         }
     }
 
@@ -74,8 +83,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         echo "<script>alert('게시글이 성공적으로 작성되었습니다.'); window.location.href='index.php';</script>";
+        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
     } else {
         echo "<script>alert('게시글 작성이 취소되었습니다. 허용된 파일 형식을 사용해주세요.'); window.history.back();</script>";
+        exit();
     }
 
     exit();

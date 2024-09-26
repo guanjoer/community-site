@@ -1,4 +1,8 @@
 <?php
+session_set_cookie_params([
+    'httponly' => true, 
+    'samesite' => 'Lax' // Cross-site 요청에 대한 보호(Lax, Strict, None)
+]);
 session_start();
 
 require_once 'config/db.php';
@@ -17,7 +21,7 @@ if (isset($_GET['id'])) {
 
     // 작성자 또는 관리자 여부 확인
     if ($post['user_id'] != $_SESSION['user_id'] && $_SESSION['role'] !== 'admin') {
-        echo "<script>alert('게시글을 수정할 권한이 없습니다.'); window.location.href='index.php';</script>";
+        echo "<script>alert('게시글을 수정할 권한이 없습니다.'); history.back();</script>";
         exit();
     }
 

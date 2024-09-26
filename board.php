@@ -1,4 +1,9 @@
 <?php
+session_set_cookie_params([
+    'httponly' => true, 
+    'samesite' => 'Lax' // Cross-site 요청에 대한 보호(Lax, Strict, None)
+]);
+
 session_start();
 
 require_once 'config/db.php';
@@ -6,7 +11,7 @@ require_once 'config/db.php';
 require_once 'queries.php';
 
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-$posts_per_page = 5;
+$posts_per_page = 10;
 $offset = ($page - 1) * $posts_per_page;
 
 
