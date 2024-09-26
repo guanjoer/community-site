@@ -1,6 +1,9 @@
 <?php
 session_start();
 
+// CSRF Token
+$_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+
 require_once 'config/db.php';
 
 require_once 'queries.php';
@@ -11,6 +14,7 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
+
 // 게시판 목록 가져오기
 $stmt = $pdo->query("SELECT id, name FROM boards ORDER BY name ASC");
 $boards = $stmt->fetchAll();
@@ -18,13 +22,17 @@ $boards = $stmt->fetchAll();
 
 // 게시글 작성 처리
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if($_SESSION['csrf_token'] != $_POST['_csrf']) {
+        echo "<script>alert('잘못된 접근입니다.'); window.history.back();</script>";
+    }
+
     $user_id = $_SESSION['user_id'];
     $board_id = $_POST['board_id'];
     $title = $_POST['title'];
     $content = $_POST['content'];
 
     // 파일 업로드 처리
-    $upload_success = true;  // 파일 업로드 성공 여부를 추적하는 변수
+    $upload_success = true;
 
     if (isset($_FILES['uploaded_file']) && $_FILES['uploaded_file']['error'] == 0) {
         $allowed_extensions = ['png', 'jpg', 'pdf', 'xlsx'];
@@ -41,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         } else {
             $upload_success = false;
-            echo "<script>alert('허용되지 않은 파일 형식입니다.');</script>";
+            echo "<script>alert('허용되지 않은 파일 형식입니다.'); history.back()</script>";
         }
     }
 
@@ -88,6 +96,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <h1>Create Post</h1>
     
         <form method="post" action="write_post.php" enctype="multipart/form-data">
+        <?php echo '<input type="hidden" name="_csrf" value="' . $_SESSION['csrf_token'] . '">'; ?>
             <div id="create-post-select-title">
             <label for="board_id">SELECT BOARD</label>
             <select id="board_id" name="board_id" required>

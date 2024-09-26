@@ -2,7 +2,7 @@
 // success.php
 session_start();
 
-// 회원가입 시 전달된 username이 세션에 저장되어 있다고 가정
+// 회원가입 시 username 세션에 저장
 if (!isset($_SESSION['username'])) {
     // 만약 세션에 username이 없으면, 메인 페이지로 리다이렉트
     header("Location: index.php");

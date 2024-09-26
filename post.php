@@ -27,7 +27,7 @@ if (!$post) {
 
 // 댓글 작성 처리
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['comment_content'])) {
-	if (!isset($_SESSION['user_id'])) {  // 로그인 여부 확인
+	if (!isset($_SESSION['user_id'])) {
         echo "<script>alert('로그인이 필요합니다.'); window.location.href='login.php';</script>";
         exit();
     }

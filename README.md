@@ -16,16 +16,38 @@
 - 게시글 검색 기능
 - 관리자 대시보드 기능(사용자/게시판/게시글 관리)
 
+---
+
 **공격에 대한 대응 로직:** 
 
-- `htmlspecialchars` 함수를 사용하여 사용자 입력값을 이스케이프 처리하여 XSS 공격에 대한 대응 로직 존재
-<!-- - **XSS**, **NoSQLi** 공격에 대한 대응 로직 존재
-	- 동적 HTML 생성을 담당하는 `ejs`엔진을 사용하는 파일에서 `<%= %>` 사용
-	- `express-session` 라이브러리를 통해 세션 관리 및 `httpOnly` 플래그 적용
-	- 사용자 아이디에 `@`을 포함해야 하며, 비밀번호는 `bcrypt.compare(this.password, hashedPassword)`를 통해 검증
-	- `express-mongo-sanitize` 혹은 `mongo-sanitize` 라이브러리를 사용하여 `$`, `.`과 같이 악의적인 사용자 입력값에 대해 **Sanitize**
-- 물품 장바구니 추가, 수정, 삭제 시 `Ajax` 처리 및 `DOM` 업데이트
-- **ROLE** 기반 접근 제어
+- `htmlspecialchars` 함수를 사용하여 사용자 입력값을 이스케이프 처리하여 **XSS** 공격에 대한 대응 로직 구현
+
+- **Prepared Statements**를 사용하여 SQL 쿼리와 사용자 입력 값을 분리하여 **SQL Injection** 공격에 대한 대응 로직 구현
+
+```php
+$stmt = $pdo->prepare("INSERT INTO posts (user_id, board_id, title, content) VALUES (?, ?, ?, ?)");
+        $stmt->execute([$user_id, $board_id, $title, $content]);
+```
+
+- `CSRF Token`을 사용하여 **CSRF** 공격에 대한 대응 로직 구현
+
+```php
+// CSRF Token 생성
+$_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+
+// form 태그 내 CSRF Token 추가
+<?php echo '<input type="hidden" name="_csrf" value="' . $_SESSION['csrf_token'] . '">'; ?>
+
+// CSRF Token 검증 진행
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if($_SESSION['csrf_token'] != $_POST['_csrf']) {
+        echo "<script>alert('잘못된 접근입니다.'); window.history.back();</script>";
+    }
+	// 이후 로직...
+}
+```
+
+<!-- - **ROLE** 기반 접근 제어
 
 	- 관리자 ROLE인 사용자의 경우에만 **관리자 페이지에 접근** 가능
 	- 관리자인 경우에만 **물품의 추가, 수정, 삭제** 가능.

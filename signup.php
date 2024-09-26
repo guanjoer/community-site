@@ -53,14 +53,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // 사용자 등록
-    $sql = "INSERT INTO users (username, email, password) VALUES (?, ?, ?)";
+    $uuid = bin2hex(random_bytes(16));
+    $sql = "INSERT INTO users (uuid, username, email, password) VALUES (?, ?, ?, ?)";
     $stmt = $pdo->prepare($sql);
-    $stmt->execute([$username, $email, $password_hashed]);
+    $stmt->execute([$uuid, $username, $email, $password_hashed]);
 
-    // 세션에 사용자 이름 저장
     $_SESSION['username'] = $username;
 
-    // 회원가입 후 리다이렉트
     header("Location: signup_success.php");
     exit();
 }
