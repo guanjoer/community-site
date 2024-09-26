@@ -2,9 +2,7 @@
 
 해당 프로젝트는 `PHP`, `MySQL`을 주요 기술 스택으로 사용하여 만든 **커뮤니티 웹 사이트**입니다.
 
----
-
-**주요 기능:**
+### 주요 기능
 
 - 회원 가입 및 로그인(세션 기반 인증)
 - 게시글 CRUD(Create/Read/Update/Delete)
@@ -16,11 +14,14 @@
 - 게시글 검색 기능
 - 관리자 대시보드 기능(사용자/게시판/게시글 관리)
 
----
 
-**공격에 대한 대응 로직:** 
+### 공격에 대한 대응 로직
+
+#### XSS
 
 - `htmlspecialchars` 함수를 사용하여 사용자 입력값의 입력과 출력을 이스케이프 처리하여 **XSS** 공격에 대한 대응 로직 구현
+
+#### SQL Injection
 
 - **Prepared Statements**를 사용하여 SQL 쿼리와 사용자 입력 값을 분리하여 **SQL Injection** 공격에 대한 대응 로직 구현
 
@@ -28,6 +29,8 @@
 $stmt = $pdo->prepare("INSERT INTO posts (user_id, board_id, title, content) VALUES (?, ?, ?, ?)");
         $stmt->execute([$user_id, $board_id, $title, $content]);
 ```
+
+#### CSRF Attack
 
 - `CSRF Token`을 사용하여 **CSRF** 공격에 대한 대응 로직 구현
 
@@ -48,6 +51,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 ```
+
+#### File Upload Vulnerability
 
 - 파일 업로드 시, 파일 이름 **난수화**, **화이트리스트 기반**의 파일 **확장자**, **MIME type**의 검증 및 **.htaccess** 설정을 통해 **php** 파일이 **실행** 되지 않도록 하여 **파일 업로드 취약점**에 대한 대응 로직 구현
 
