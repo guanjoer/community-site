@@ -26,21 +26,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo "<script>alert('잘못된 접근입니다.'); window.history.back();</script>";
     }
 
-    $user_id = $_SESSION['user_id'];
-    $board_id = $_POST['board_id'];
-    $title = $_POST['title'];
-    $content = $_POST['content'];
+    $user_id = htmlspecialchars($_SESSION['user_id']);
+    $board_id = htmlspecialchars($_POST['board_id']);
+    $title = htmlspecialchars($_POST['title']);
+    $content = htmlspecialchars($_POST['content']);
 
     // 파일 업로드 처리
     $upload_success = true;
 
     if (isset($_FILES['uploaded_file']) && $_FILES['uploaded_file']['error'] == 0) {
+        // 화이트리스트 기반 파일 확장자, MIME type 검증
         $allowed_extensions = ['png', 'jpg', 'pdf', 'xlsx'];
-        $file_extension = pathinfo($_FILES['uploaded_file']['name'], PATHINFO_EXTENSION);
+        $allowed_mime_types = ['image/png', 'image/jpeg', 'application/pdf', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
 
-        if (in_array($file_extension, $allowed_extensions)) {
+        // 파일 정보 추출
+        $file_extension = pathinfo($_FILES['uploaded_file']['name'], PATHINFO_EXTENSION);
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        $mime_type = finfo_file($finfo, $_FILES['uploaded_file']['tmp_name']);
+
+        if (in_array($file_extension, $allowed_extensions) && in_array($mime_type, $allowed_mime_types)) {
             $upload_dir = 'uploads/';
-            $file_name =  uniqid() . '.' . $file_extension;
+            $file_name =  uniqid() . '.' . $file_extension; // 파일 이름 난수화
             $file_path = $upload_dir . $file_name;
 
             if (!move_uploaded_file($_FILES['uploaded_file']['tmp_name'], $file_path)) {
@@ -58,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt = $pdo->prepare("INSERT INTO posts (user_id, board_id, title, content) VALUES (?, ?, ?, ?)");
         $stmt->execute([$user_id, $board_id, $title, $content]);
 
-        // 게시글 ID 가져오기
+        // 게시글 ID
         $post_id = $pdo->lastInsertId();
 
         // 파일 정보 데이터베이스에 저장 (파일 업로드가 성공했을 경우)

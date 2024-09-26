@@ -20,7 +20,7 @@
 
 **공격에 대한 대응 로직:** 
 
-- `htmlspecialchars` 함수를 사용하여 사용자 입력값을 이스케이프 처리하여 **XSS** 공격에 대한 대응 로직 구현
+- `htmlspecialchars` 함수를 사용하여 사용자 입력값의 입력과 출력을 이스케이프 처리하여 **XSS** 공격에 대한 대응 로직 구현
 
 - **Prepared Statements**를 사용하여 SQL 쿼리와 사용자 입력 값을 분리하여 **SQL Injection** 공격에 대한 대응 로직 구현
 
@@ -39,12 +39,14 @@ $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 <?php echo '<input type="hidden" name="_csrf" value="' . $_SESSION['csrf_token'] . '">'; ?>
 
 // CSRF Token 검증 진행
+<?php
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if($_SESSION['csrf_token'] != $_POST['_csrf']) {
-        echo "<script>alert('잘못된 접근입니다.'); window.history.back();</script>";
+        echo "<script>alert('잘못된 접근입니다.'); history.back();</script>";
     }
 	// 이후 로직...
 }
+?>
 ```
 
 <!-- - **ROLE** 기반 접근 제어
