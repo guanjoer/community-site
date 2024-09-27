@@ -1,7 +1,7 @@
 <?php
 session_set_cookie_params([
     'httponly' => true, 
-    'samesite' => 'Lax' // Cross-site 요청에 대한 보호(Lax, Strict, None)
+    'samesite' => 'Lax'
 ]);
 session_start();
 
@@ -30,6 +30,7 @@ if (isset($_GET['id'])) {
         echo "<script>alert('게시판이 성공적으로 삭제되었습니다.'); window.location.href='boards.php';</script>";
     } else {
         echo "<script>alert('존재하지 않는 게시판입니다.'); history.back();</script>";
+        exit();
     }
 } else {
     header("Location: boards.php");

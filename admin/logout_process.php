@@ -18,7 +18,7 @@ if (isset($_GET['logout'])) {
         if ($redirect_url) {
             header("Location: $redirect_url");
         } else {
-            header("Location: index.php");
+            header("Location: ../index.php");
         }
         exit();
     }

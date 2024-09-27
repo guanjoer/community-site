@@ -1,7 +1,7 @@
 <?php
 session_set_cookie_params([
     'httponly' => true, 
-    'samesite' => 'Lax' // Cross-site 요청에 대한 보호(Lax, Strict, None)
+    'samesite' => 'Lax'
 ]);
 session_start();
 
@@ -19,6 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->execute([$name]);
     if ($stmt->fetchColumn() > 0) {
         echo "<script>alert('이미 존재하는 게시판 이름입니다. 다른 이름을 선택하세요.'); window.history.back();</script>";
+        exit();
     } else {
         // 게시판 생성
         $stmt = $pdo->prepare("INSERT INTO boards (name, description) VALUES (?, ?)");

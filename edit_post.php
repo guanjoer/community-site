@@ -15,7 +15,7 @@ if (isset($_GET['id'])) {
     $post = $stmt->fetch();
 
     if (!$post) {
-        echo "<script>alert('존재하지 않는 게시글입니다.'); window.location.href='index.php';</script>";
+        echo "<script>alert('존재하지 않는 게시글입니다.'); history.back();</script>";
         exit();
     }
 
@@ -64,6 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             $upload_success = false;
             echo "<script>alert('허용되지 않은 파일 형식입니다.'); history.back(); </script>";
+            exit();
         }
     }
 

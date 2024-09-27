@@ -35,6 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->execute([$name, $board_id]);
     if ($stmt->fetchColumn() > 0) {
         echo "<script>alert('이미 존재하는 게시판 이름입니다. 다른 이름을 선택하세요.'); history.back();</script>";
+        exit();
     } else {
         // 게시판 업데이트
         $stmt = $pdo->prepare("UPDATE boards SET name = ?, description = ? WHERE id = ?");

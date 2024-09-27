@@ -43,7 +43,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         header("Location: " . $redirect_url);
         exit();
     } else {
-        // $error = "사용자명 또는 비밀번호가 잘못되었습니다.";
         echo "<script>alert('로그인에 실패했습니다. 다시 시도해주세요.'); history.back();</script>";
         exit();
     }
