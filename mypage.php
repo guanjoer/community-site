@@ -40,10 +40,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (move_uploaded_file($_FILES["profile_image"]["tmp_name"], $target_file)) {
                 $profile_image = $new_filename;
             } else {
-                echo "파일 업로드 중 오류가 발생했습니다.";
+                echo "<script>alert('파일 업로드 중 오류가 발생했습니다.'); history.back();</script>";
+                exit();
             }
         } else {
-            echo "허용되지 않는 파일 형식입니다.";
+            echo "<script>alert('허용되지 않는 파일 형식입니다.'); history.back();</script>";
+            exit();
         }
     }
 
@@ -66,10 +68,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 echo "<script>alert('비밀번호가 성공적으로 변경되었습니다.');</script>";
             } else {
-                echo "<script>alert('새 비밀번호가 일치하지 않습니다.');</script>";
+                echo "<script>alert('새 비밀번호가 일치하지 않습니다.'); history.back();</script>";
+                exit();
             }
         } else {
-            echo "<script>alert('현재 비밀번호가 올바르지 않습니다.');</script>";
+            echo "<script>alert('현재 비밀번호가 올바르지 않습니다.'); history.back();</script>";
+            exit();
         }
     }
 
