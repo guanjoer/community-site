@@ -46,10 +46,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_FILES['uploaded_file']) && $_FILES['uploaded_file']['error'] == 0) {
         $allowed_extensions = ['png', 'PNG', 'jpg', 'pdf', 'xlsx'];
         $file_extension = pathinfo($_FILES['uploaded_file']['name'], PATHINFO_EXTENSION);
+        $file_name_without_ext = pathinfo($_FILES['uploaded_file']['name'], PATHINFO_FILENAME);
 
         if (in_array($file_extension, $allowed_extensions)) {
             $upload_dir = 'uploads/';
-            $new_file_name = uniqid() . '.' . $file_extension;
+            $new_file_name =  $file_name_without_ext.'_'.uniqid() . '.' . $file_extension;
             $new_file_path = $upload_dir . $new_file_name;
 
             if (!move_uploaded_file($_FILES['uploaded_file']['tmp_name'], $new_file_path)) {

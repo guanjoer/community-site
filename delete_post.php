@@ -53,7 +53,7 @@ if (isset($_GET['id'])) {
 
     echo "<script>alert('게시글이 성공적으로 삭제되었습니다.')";
 
-    if (isset($_SESSION['user_id']) || $_SESSION['role'] == 'admin') {
+    if (isset($_SESSION['user_id']) && $_SESSION['role'] == 'admin') {
         header("Location: admin/posts.php");
         exit();
     } else {

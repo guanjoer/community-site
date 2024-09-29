@@ -6,6 +6,11 @@ session_set_cookie_params([
 
 session_start();
 
+// CSRF Token
+if (!isset($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+
 require_once 'config/db.php';
 
 require_once 'queries.php';

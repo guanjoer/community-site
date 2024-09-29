@@ -1,14 +1,14 @@
 <?php
 session_set_cookie_params([
     'httponly' => true, 
-    'samesite' => 'Lax' // Cross-site 요청에 대한 보호(Lax, Strict, None)
+    'samesite' => 'Lax'
 ]);
 session_start();
 
 // CSRF Token
-if (!isset($_SESSION['csrf_token'])) {
-    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
-}
+// if (!isset($_SESSION['csrf_token'])) {
+//     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+// }
 
 require_once 'config/db.php';
 
@@ -48,12 +48,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // 파일 정보 추출
         $file_extension = pathinfo($_FILES['uploaded_file']['name'], PATHINFO_EXTENSION);
+        $file_extension = strtolower($file_extension);
+        strtolower 
+        $file_name_without_ext = pathinfo($_FILES['uploaded_file']['name'], PATHINFO_FILENAME);
         $finfo = finfo_open(FILEINFO_MIME_TYPE);
         $mime_type = finfo_file($finfo, $_FILES['uploaded_file']['tmp_name']);
 
         if (in_array($file_extension, $allowed_extensions) && in_array($mime_type, $allowed_mime_types)) {
             $upload_dir = 'uploads/';
-            $file_name =  uniqid() . '.' . $file_extension; // 파일 이름 난수화
+            $file_name =  $file_name_without_ext.'_'.uniqid() . '.' . $file_extension; // 파일 이름 난수화
             $file_path = $upload_dir . $file_name;
 
             if (!move_uploaded_file($_FILES['uploaded_file']['tmp_name'], $file_path)) {
