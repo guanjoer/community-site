@@ -152,3 +152,24 @@ if ($post['user_id'] != $_SESSION['user_id'] && $_SESSION['role'] !== 'admin') {
     exit();
 }
 ```
+
+- 웹 서버 설정 파일 수정
+
+```php
+// /etc/apache2/apach2.conf
+// 파일 다운로드 제한
+<FilesMatch "\.(sql|ini|conf|log|sh)$">
+        Order allow,deny
+        Deny from all
+</FilesMatch>
+
+// HTTP Response 메시지 중, Server 헤더 내 버전 정보 삭제
+ServerTokens Prod
+
+// 에러페이지 하단 버전 정보 삭제
+ServerSignature Off
+
+// /usr/local/etc/php/php.ini
+// X-Powered-By 내 버전 정보 삭제
+expose_php = Off
+```
