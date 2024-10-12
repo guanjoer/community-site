@@ -17,7 +17,7 @@ $offset = ($page - 1) * $posts_per_page;
 
 // 게시판 정보 가져오기
 if (isset($_GET['id'])) {
-    $board_id = $_GET['id'];
+    $board_id = htmlspecialchars($_GET['id']);
 
     $total_posts_stmt = $pdo->prepare("SELECT COUNT(*) FROM posts WHERE board_id = ?");
     $total_posts_stmt->execute([$board_id]);

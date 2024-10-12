@@ -98,7 +98,7 @@ $board = $stmt->fetch();
                 <h2>첨부 파일</h2>
                 <ul>
                     <?php foreach ($files as $file): ?>
-                        <li><a href="<?php echo htmlspecialchars($file['file_path']); ?>" download><?php echo htmlspecialchars($file['file_name']); ?></a></li>
+                        <li><a href="download.php?post_id=<?= $post_id ?>&file_id=<?= $file['id']; ?>"><?php echo htmlspecialchars($file['file_name']); ?></a></li>
                     <?php endforeach; ?>
                 </ul>
             <?php endif; ?>

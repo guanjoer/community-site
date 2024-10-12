@@ -49,7 +49,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // 파일 정보 추출
         $file_extension = pathinfo($_FILES['uploaded_file']['name'], PATHINFO_EXTENSION);
         $file_extension = strtolower($file_extension);
-        strtolower 
         $file_name_without_ext = pathinfo($_FILES['uploaded_file']['name'], PATHINFO_FILENAME);
         $finfo = finfo_open(FILEINFO_MIME_TYPE);
         $mime_type = finfo_file($finfo, $_FILES['uploaded_file']['tmp_name']);

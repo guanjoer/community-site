@@ -170,6 +170,6 @@ ServerTokens Prod
 ServerSignature Off
 
 // /usr/local/etc/php/php.ini
-// X-Powered-By 내 버전 정보 삭제
+// X-Powered-By 헤더 내 버전 정보 삭제
 expose_php = Off
 ```
