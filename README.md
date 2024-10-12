@@ -111,6 +111,54 @@ $upload_success = true;
 </FilesMatch>
 ```
 
+#### **Path Traversal Vulnerability**
+
+- 파일 이름 기반이 아닌, **파일 ID**와 **게시글 ID**를 기반으로 DB 내에 해당 파일이 존재하는지 확인 하고, 해당 파일의 경로를 검증할 때, `/var/www/html/` 과 같이 `base` 디렉토리를 지정하여 해당 디렉토리로 시작하지 않는 파일의 경로의 경우 파일 다운로드가 불가능하도록 로직 설정. 또한 `realpath()` 함수를 사용하여, **파일 정규화**를 통해 `../../../` 과 같은 **상대 경로를 절대 경로로 치환**하여, 파일 다운로드 취약점에 대응
+
+```php
+if (isset($_GET['post_id']) && isset($_GET['file_id'])) {
+    $post_id = (int) $_GET['post_id'];   
+    $file_id = (int) $_GET['file_id']; 
+
+    // post_id와 file_id가 일치하는 파일
+    $stmt = $pdo->prepare("SELECT * FROM uploads WHERE post_id = ? AND id = ?");
+    $stmt->execute([$post_id, $file_id]);
+    $file = $stmt->fetch();
+
+    if ($file) {
+        // 파일 경로 설정
+		$base_dir = 'C:/xampp/htdocs/community_site/';
+		$combined_path = $base_dir . $file['file_path'];
+		
+		// 파일 정규화. 즉 상대 경로를 절대 경로로 치환
+        $file_path = realpath($base_dir . $file['file_path']);
+
+        // 파일 존재 유무 및 경로 검증
+        if (file_exists($combined_path) && strpos($file_path, $base_dir) === 0 && file_exists($file_path)) {
+            header('Content-Description: File Transfer');
+            header('Content-Type: application/octet-stream');
+            header('Content-Disposition: attachment; filename="' . basename($file_path) . '"');
+            header('Content-Length: ' . filesize($file_path));
+
+            readfile($file_path);
+            exit;
+        } else {
+            header("HTTP/1.0 404 Not Found");
+			include('./errors/404.php');
+            exit;
+        }
+    } else {
+        echo "<script>alert('파일을 찾을 수 없습니다.'); window.location.href='post.php?id=$post_id';</script>";
+        exit;
+    }
+} else {
+    header("HTTP/1.0 404 Not Found");
+    include('./errors/404.php');
+    exit;
+}
+```
+
+
 #### **Authentication & Access Contorl**
 
 - 사용자에게 **ROLE(user/admin)**을 부여하여 `ROLE === "admin"` 인 사용자만이 `/admin/` 경로에 해당하는 관리자 페이지에 접근이 가능하도록 로직 구현
