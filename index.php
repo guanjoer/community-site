@@ -126,5 +126,7 @@ $posts = $stmt->fetchAll();
             <?php endif; ?>
         </section>
     </div>
+    
+    <a href="redirect.php?url=http://127.0.0.1/community_site/post.php?id=27&board=3">Redirection Test</button>
 </body>
 </html>
