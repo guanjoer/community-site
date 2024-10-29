@@ -22,6 +22,15 @@ th {
 	text-align: center;
     font-weight: bold;
 	padding-top: 1.5rem;
+    color: #3d3d3d;
+}
+
+tbody a {
+    color: #3d3d3d;
+}
+
+tbody a:hover {
+    text-decoration: underline;
 }
 
 tbody tr:hover {
@@ -52,6 +61,6 @@ th:nth-child(2), td:nth-child(2) {  /* 제목 열 */
 
 table a {
 	text-decoration: none;
-    color: #007BFF;
+    /* color: #007BFF; */
     font-weight: bold;
 }
