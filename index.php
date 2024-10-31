@@ -1,6 +1,4 @@
 <?php
-// fetch 함수를 통한 데이터 전송 및 스크립트 로드 관련 CSP 정책
-header("Content-Security-Policy: connect-src 'self'; script-src 'self';");
 
 session_set_cookie_params([
     'httponly' => true, 
@@ -8,6 +6,25 @@ session_set_cookie_params([
 ]);
 
 session_start();
+
+// CSP
+if (isset($_SESSION['username'])) {
+        header("Content-Security-Policy: default-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com; script-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com; report-uri /community_site/csp-report.php?token=" . urlencode($_SESSION['username']));
+} else {
+    header("Content-Security-Policy: default-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com; script-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com; report-uri /community_site/csp-report.php");
+}
+
+// 취약한 버전
+// if (isset($_SESSION['username'])) {
+//     if(isset($_GET['token'])) {
+//         header("Content-Security-Policy: default-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com; script-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com; report-uri /community_site/csp-report.php?token=" . $_GET['token']);
+//     } else {
+//         header("Content-Security-Policy: default-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com; script-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com; report-uri /community_site/csp-report.php?token=" . urlencode($_SESSION['username']));
+//     }
+// } else {
+//     header("Content-Security-Policy: default-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com; script-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com; report-uri /community_site/csp-report.php");
+// }
+
 
 // CSRF Token
 if (!isset($_SESSION['csrf_token'])) {
@@ -58,7 +75,6 @@ $posts = $stmt->fetchAll();
 </head>
 <body>
     <?php require_once 'header.php' ?>
-
     <nav id="search-bar">
         <form method="get" action="search.php">
             <input type="text" name="q" placeholder="검색어를 입력하세요" required>
