@@ -1,4 +1,7 @@
 <?php
+// fetch 함수를 통한 데이터 전송 및 스크립트 로드 관련 CSP 정책
+header("Content-Security-Policy: connect-src 'self'; script-src 'self';");
+
 session_set_cookie_params([
     'httponly' => true, 
     'samesite' => 'Lax' // Cross-site 요청에 대한 보호(Lax, Strict, None)
