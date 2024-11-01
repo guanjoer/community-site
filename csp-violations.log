@@ -102,3 +102,5 @@ User Token: GuanJoer | Document URI: http://192.168.0.10/community_site/index.ph
 User Token: GuanJoer | Document URI: http://192.168.0.10/community_site/index.php | Violated Directive: font-src | Blocked URI: https://fonts.gstatic.com/s/roboto/v32/KFOlCnqEu92Fr1MmSU5fBBc4.woff2
 User Token: GuanJoer | Document URI: http://192.168.0.10/community_site/index.php | Violated Directive: script-src-elem | Blocked URI: inline
 User Token: GuanJoer | Document URI: http://192.168.0.10/community_site/index.php?test=%3Cscript%3Ealert(1)%3C/script%3E | Violated Directive: script-src-elem | Blocked URI: inline
+User Token: GuanJoer | Document URI: http://192.168.0.10/community_site/ | Violated Directive: script-src-elem | Blocked URI: inline
+User Token: GuanJoer | Document URI: http://192.168.0.10/community_site/index.php | Violated Directive: script-src-elem | Blocked URI: inline
