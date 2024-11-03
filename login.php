@@ -31,19 +31,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // 로그인 성공 시 리다이렉트
         $redirect_url = isset($_POST['redirect_url']) ? $_POST['redirect_url'] : 'index.php';
         // var_dump($redirect_url);
-        if (strpos($redirect_url, '/signup') || strpos($redirect_url, '/signup_success.php')) {
+        if (strpos($redirect_url, '/signup') || strpos($redirect_url, '/signup_success.php') || strpos($redirect_url, '/login')) {
             $redirect_url = 'index.php';
         }
-
-        // if (strpos($redirect_url, '192.168.0.10') === false && strpos($redirect_url, 'localhost') === false) {
-        //     echo "<script>alert('올바르지 않은 접근입니다.'); history.back();</script>";
-        //    exit();
-        //}
 
         header("Location: " . $redirect_url);
         exit();
     } else {
-        echo "<script>alert('로그인에 실패했습니다. 다시 시도해주세요.'); history.back();</script>";
+        $error_url = "login.php?error=true&username=" . $username;
+        header("Location: " . $error_url);
         exit();
     }
 }
@@ -67,13 +63,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <?php require_once 'header.php' ?>
 
     <div id="login-container">
-        <h1>Login</h1>
-        <?php if (isset($error)): ?>
-            <p style="color:red;"><?php echo htmlspecialchars($error); ?></p>
+        <?php if(!isset($_GET['error'])): ?>
+            <h1 style="margin-bottom:4rem;">Login</h1>
+        <?php else: ?>
+            <h1>Login</h1>
+        <?php endif;?>
+
+        <?php if (isset($_GET['error'])): ?>
+            <p id="login-error"><?php echo "입력하신 아이디 및 비밀번호를 확인하세요."; ?></p>
         <?php endif; ?>
+
         <form method="post" action="login.php">
             <input type="hidden" name="redirect_url" value="<?php echo htmlspecialchars($_SERVER['HTTP_REFERER']); ?>">
-            <input type="text" id="username" name="username" placeholder="USER NAME" required><br>
+            <input type="text" id="username" name="username" placeholder="USER NAME" value="<?php echo isset($_GET['username']) ? htmlspecialchars($_GET['username']) : ''; ?>" >
     
             <input type="password" id="password" name="password" placeholder="PASSWORD" required><br>
     

@@ -89,7 +89,7 @@ $board = $stmt->fetch();
 				<img id="post-profile" src="uploads/<?php echo !empty($post_user['profile_image']) ? htmlspecialchars($post_user['profile_image']) : 'default.png'; ?>" alt="프로필 이미지">
                 <div class="post-profile-info-2">
                     <p><?php echo $post_user['username'] ?></p>
-                    <span><?php echo date('Y-m-d H:i', strtotime($post_user['created_at'])); ?></span>
+                    <span><?php echo date('Y-m-d H:i', strtotime($post['created_at'])); ?></span>
                 </div>
             </div>
                 <p class="post-content"><?php echo htmlspecialchars($post['content']); ?></p>
@@ -118,7 +118,7 @@ $board = $stmt->fetch();
                     <li>
                     <div class="comment-author-area">
                         <img id="post-profile" src="uploads/<?php echo !empty($comment['profile_image']) ? $comment['profile_image'] : 'default.png'; ?>" alt="프로필 이미지">
-                            <span class="comment-author"><a href="<?php echo $comment['homepage']?>"><?php echo $comment['username']; ?></a></span>
+                            <span class="comment-author"><a href="<?php echo $comment['homepage']?>" target="_blank"><?php echo $comment['username']; ?></a></span>
         
                             <span class="comment-date"><?php echo date('Y-m-d H:i', strtotime($comment['created_at'])); ?></span>
 

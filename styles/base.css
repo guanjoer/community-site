@@ -187,6 +187,8 @@ ul li span {
     border: 1px solid #ddd;
     border-radius: 20px 0 0 20px;
     outline: none;
+	font-weight: 500;
+    font-size: 1rem;
 }
 
 #search-bar input::placeholder {
@@ -198,6 +200,7 @@ ul li span {
 
 #search-bar button {
 	padding: 10px 20px;
+	padding-top: 13px;
     border: 1px solid #ddd;
     border-left: none;
     background: #5a5a5a;
