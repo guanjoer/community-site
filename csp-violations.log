@@ -120,3 +120,4 @@ User Token: unknown | Document URI: http://192.168.0.10/community_site/index.php
 User Token: unknown | Document URI: http://192.168.0.10/community_site/index.php | Violated Directive: script-src-elem | Blocked URI: inline
 User Token: unknown | Document URI: http://192.168.0.10/community_site/index.php | Violated Directive: script-src-elem | Blocked URI: inline
 User Token: unknown | Document URI: http://192.168.0.10/community_site/index.php | Violated Directive: script-src-elem | Blocked URI: inline
+User Token: unknown | Document URI: http://192.168.0.10/community_site/ | Violated Directive: script-src-elem | Blocked URI: inline
