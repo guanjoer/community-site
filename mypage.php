@@ -1,9 +1,17 @@
 <?php
 session_set_cookie_params([
     'httponly' => true, 
-    'samesite' => 'Lax' // Cross-site 요청에 대한 보호(Lax, Strict, None)
+    'samesite' => 'Lax'
 ]);
 session_start();
+
+if(!isset($_SESSION['user_id'])) {
+    echo "<script>
+            alert('로그인이 필요합니다.');
+            window.location.href = 'login.php';
+        </script>";
+    exit();
+}
 
 require_once 'config/db.php';
 

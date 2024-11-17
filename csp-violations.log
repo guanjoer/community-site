@@ -155,3 +155,4 @@ User Token: GuanJoer | Document URI: http://localhost/community_site/index.php |
 User Token: GuanJoer | Document URI: http://localhost/community_site/index.php | Violated Directive: script-src-elem | Blocked URI: inline
 User Token: GuanJoer | Document URI: http://localhost/community_site/index.php | Violated Directive: script-src-elem | Blocked URI: inline
 User Token: GuanJoer | Document URI: http://localhost/community_site/index.php | Violated Directive: script-src-elem | Blocked URI: inline
+User Token: GuanJoer | Document URI: http://localhost/community_site/ | Violated Directive: script-src-elem | Blocked URI: inline
