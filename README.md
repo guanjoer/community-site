@@ -113,49 +113,29 @@ $upload_success = true;
 
 #### **Path Traversal Vulnerability**
 
-- 파일 다운로드 요청 시, 이름이 아닌 **파일 ID**와 **게시글 ID**를 기반으로 **DB** 내에 해당 파일이 존재하는지 확인하고, 해당 파일의 경로를 검증할 때, `/var/www/html/` 과 같이 `base` 디렉토리를 지정하여 해당 디렉토리로 시작하지 않을 경우 파일 다운로드가 불가능하도록 로직 설정. 또한 `realpath()` 함수를 사용하여, **파일 정규화**를 통해 `../../../` 와 같은 **상대 경로를 절대 경로로 치환**하여, 파일 다운로드 취약점에 대응
+- 파일 다운로드 요청 시, `basename()` 함수를 사용자가 전달한 `$file`값에 전달하여 어떤 경로를 입력하더라도 특정 파일 이름만 가져오도록 하고, 해당 파일을 파일이 업로드 되는 경로와 합친 후, `realpath()` 함수를 적용하여, `../../../`와 같은 상대 경로를 입력하더라도 해당 경로를 절대경로로 치환 하고, 파일 업로드 경로인 `$base_dir`경로와 합쳐진 파일의 전체 경로인 `$file_path`가 파일 업로드 경로인 `$base_dir`로 시작하는지 검증하여 파일 다운로드 취약점에 대응
 
 ```php
-if (isset($_GET['post_id']) && isset($_GET['file_id'])) {
-    $post_id = (int) $_GET['post_id'];   
-    $file_id = (int) $_GET['file_id']; 
+<?php
+$base_dir = 'C:/xampp/htdocs/community_site/uploads/'; // 파일이 저장된 디렉토리
+$file = $_GET['file'] ?? '';
 
-    // post_id와 file_id가 일치하는 파일
-    $stmt = $pdo->prepare("SELECT * FROM uploads WHERE post_id = ? AND id = ?");
-    $stmt->execute([$post_id, $file_id]);
-    $file = $stmt->fetch();
 
-    if ($file) {
-        // 파일 경로 설정
-		$base_dir = 'C:/xampp/htdocs/community_site/';
-		$combined_path = $base_dir . $file['file_path'];
-		
-		// 파일 정규화. 즉 상대 경로를 절대 경로로 치환
-        $file_path = realpath($base_dir . $file['file_path']);
+$safe_file = basename($file);
 
-        // 파일 존재 유무 및 경로 검증
-        if (file_exists($combined_path) && strpos($file_path, $base_dir) === 0 && file_exists($file_path)) {
-            header('Content-Description: File Transfer');
-            header('Content-Type: application/octet-stream');
-            header('Content-Disposition: attachment; filename="' . basename($file_path) . '"');
-            header('Content-Length: ' . filesize($file_path));
+$file_path = str_replace('\\', '/', realpath($base_dir . $safe_file));
 
-            readfile($file_path);
-            exit;
-        } else {
-            header("HTTP/1.0 404 Not Found");
-			include('./errors/404.php');
-            exit;
-        }
-    } else {
-        echo "<script>alert('파일을 찾을 수 없습니다.'); window.location.href='post.php?id=$post_id';</script>";
-        exit;
-    }
-} else {
-    header("HTTP/1.0 404 Not Found");
-    include('./errors/404.php');
-    exit;
+if (!$file_path || strpos($file_path, $base_dir) !== 0 || !file_exists($file_path)) {
+    die("Unauthorized access");
 }
+
+// 파일 다운로드 처리
+header('Content-Description: File Transfer');
+header('Content-Type: application/octet-stream');
+header('Content-Disposition: attachment; filename="' . basename($file_path) . '"');
+readfile($file_path);
+exit;
+?>
 ```
 
 
