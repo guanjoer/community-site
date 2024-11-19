@@ -19,7 +19,9 @@ require_once 'queries.php';
 
 // 사용자 정보 가져오기
 $user_id = $_SESSION['user_id'];
-$stmt = $pdo->prepare("SELECT username, email, profile_image, homepage, password FROM users WHERE id = ?");
+// $stmt = $pdo->prepare("SELECT username, email, profile_image, homepage, password FROM users WHERE id = ?");
+$stmt = $pdo->prepare("SELECT * FROM users WHERE id = ?");
+
 $stmt->execute([$user_id]);
 $user = $stmt->fetch();
 
@@ -141,7 +143,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($user['email']); ?>" required><br>
 
         <label for="homepage">Home page</label>
-        <input type="text" id="homepage" name="homepage" value="<?php echo htmlspecialchars($user['homepage']); ?>" ><br>
+        <input type="text" id="homepage" name="homepage" value="<?php isset($user['homepage']) ? htmlspecialchars($user['homepage']) : ''; ?>" ><br>
 
         <label for="profile_image">PROFILE IMAGE</label><br>
         <img id="profile-preview-2" src="uploads/<?php echo !empty($user['profile_image']) ? htmlspecialchars($user['profile_image']) : 'default.png'; ?>" alt="프로필 이미지" width="100" height="100"><br>
